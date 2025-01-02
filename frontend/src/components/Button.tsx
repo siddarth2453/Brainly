@@ -4,7 +4,8 @@ interface ButtonProps {
     text:string,
     size: "sm" | "md" | "lg",
     variant: "primary" | "secondary",
-    startIcon?:ReactElement
+    startIcon?:ReactElement,
+    onButtonClick: () => void
 }
 
 const size = {
@@ -14,14 +15,15 @@ const size = {
 }
 
 const variant = {
-    "primary" : "bg-blue-primary ",
-    "secondary": "bg-blue-secondary bg-opacity-40"
+    "primary" : "bg-blue-primary text-white",
+    "secondary": "bg-blue-secondary bg-opacity-50 text-blue-900"
 }
 
 const Button = (props: ButtonProps) => {
+    
     return  <>
-            <button className={ `${variant[props.variant]} ${size[props.size]} rounded-lg w-fit` }>
-                {`${props.startIcon}   ${props.text}`}
+            <button onClick={props.onButtonClick} className={ `${variant[props.variant]} ${size[props.size]}flex gap-2 rounded-lg w-fit font-semibold` }>
+            {props.startIcon} {props.text} 
              </button>
             </>
 }

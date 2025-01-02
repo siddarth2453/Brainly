@@ -1,9 +1,18 @@
 import express from "express";
 import { connectDb } from "./utils/db";
-import { UserModel, ContentModel } from "./models/schema";
-import jwt from "jsonwebtoken";
+import { UserModel, ContentModel, LinkModel } from "./models/schema";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userMiddleware } from "./middlewares/userMiddleware";
+import randomHash from "./utils/randomHash";
+
+declare global {
+  namespace Express {
+    export interface Request {
+        userId?: string;
+    }
+  }
+}
 
 const JWT_SECRET = "TOPSECRET";
 
@@ -134,7 +143,6 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
 
     const deleteContent = await ContentModel.deleteMany({
       _id: contentId,
-      //@ts-ignore
       userId: req.userId,
     });
 
@@ -153,6 +161,41 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
     });
   }
 });
+
+app.post("/api/v1/brain/share", userMiddleware, async (req , res) => {
+
+  try {
+    const share = req.body.share;
+    
+  if(share) {
+    await LinkModel.create({
+      hash:randomHash(10),
+      userId:req.userId
+    })
+
+    res.status(200).json({
+      message:"Generated Sharable Link",
+      userId:req.userId
+    })
+  }
+  else{
+    await LinkModel.deleteOne({
+      userId:req.userId  
+    });
+
+    res.status(200).json({
+      message:"Deleted Sharable Link"
+    })
+  }
+
+  
+  } catch (error) {
+    res.status(200).json({
+      message:"Link already Exists"
+    })
+  }
+
+})
 
 app.listen(3000, () => {
   console.log("server running succesfull");

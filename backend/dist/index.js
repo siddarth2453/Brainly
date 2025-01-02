@@ -18,6 +18,7 @@ const schema_1 = require("./models/schema");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userMiddleware_1 = require("./middlewares/userMiddleware");
+const randomHash_1 = __importDefault(require("./utils/randomHash"));
 const JWT_SECRET = "TOPSECRET";
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -135,7 +136,6 @@ app.delete("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __a
         const { contentId } = req.body;
         const deleteContent = yield schema_1.ContentModel.deleteMany({
             _id: contentId,
-            //@ts-ignore
             userId: req.userId,
         });
         if (deleteContent.deletedCount > 0) {
@@ -152,6 +152,34 @@ app.delete("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __a
     catch (error) {
         res.status(400).json({
             message: "Something went wRONG",
+        });
+    }
+}));
+app.post("/api/v1/brain/share", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const share = req.body.share;
+        if (share) {
+            yield schema_1.LinkModel.create({
+                hash: (0, randomHash_1.default)(10),
+                userId: req.userId
+            });
+            res.status(200).json({
+                message: "Generated Sharable Link",
+                userId: req.userId
+            });
+        }
+        else {
+            yield schema_1.LinkModel.deleteOne({
+                userId: req.userId
+            });
+            res.status(200).json({
+                message: "Deleted Sharable Link"
+            });
+        }
+    }
+    catch (error) {
+        res.status(200).json({
+            message: "Link already Exists"
         });
     }
 }));

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContentModel = exports.UserModel = void 0;
+exports.LinkModel = exports.ContentModel = exports.UserModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const mongoose_2 = require("mongoose");
 const UserSchema = new mongoose_2.Schema({
@@ -48,3 +48,14 @@ const ContentSchema = new mongoose_2.Schema({
     }
 });
 exports.ContentModel = mongoose_1.default.model("Content", ContentSchema);
+const LinkSchema = new mongoose_2.Schema({
+    hash: {
+        type: String,
+    },
+    userId: {
+        type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User',
+        required: true,
+        unique: true
+    }
+});
+exports.LinkModel = mongoose_1.default.model("Link", LinkSchema);
