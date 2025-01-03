@@ -1,7 +1,7 @@
 import express from "express";
 import { connectDb } from "./utils/db";
 import { UserModel, ContentModel, LinkModel } from "./models/schema";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userMiddleware } from "./middlewares/userMiddleware";
 import randomHash from "./utils/randomHash";
@@ -9,7 +9,7 @@ import randomHash from "./utils/randomHash";
 declare global {
   namespace Express {
     export interface Request {
-        userId?: string;
+      userId: string;
     }
   }
 }
@@ -162,40 +162,81 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.post("/api/v1/brain/share", userMiddleware, async (req , res) => {
-
+app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
   try {
-    const share = req.body.share;
-    
-  if(share) {
-    await LinkModel.create({
-      hash:randomHash(10),
-      userId:req.userId
-    })
+    const { share } = req.body;
 
-    res.status(200).json({
-      message:"Generated Sharable Link",
-      userId:req.userId
-    })
+    if (share) {
+      const existingUser = await LinkModel.findOne({
+        userId: req.userId,
+      });
+
+      if (existingUser) {
+        res.status(409).json({
+          message: "Already Link Exists",
+          hash: existingUser.hash,
+        });
+      } else {
+        const hash = randomHash(10);
+
+        await LinkModel.create({
+          hash,
+          userId: req.userId,
+        });
+
+        res.status(200).json({
+          message: "success creating sharable link",
+          hash,
+        });
+      }
+    } else {
+      const deletedLink = await LinkModel.deleteOne({
+        userId: req.userId,
+      });
+
+      if (deletedLink.deletedCount > 0) {
+        res.status(200).json({
+          message: "Deleted",
+        });
+      } else {
+        res.status(400).json({
+          message: "Wrong input",
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong!",
+    });
   }
-  else{
-    await LinkModel.deleteOne({
-      userId:req.userId  
+});
+
+app.get("/api/v1/brain/:share", async (req, res) => {
+  const { share } = req.params;
+  try {
+
+    const LinkInfo = await LinkModel.findOne({
+      hash: share,
     });
 
-    res.status(200).json({
-      message:"Deleted Sharable Link"
-    })
-  }
+    if (LinkInfo) {
+      const userContents = await ContentModel.find({
+        userId: LinkInfo.userId,
+      }).populate("userId", "username");
 
-  
+      res.status(200).json({
+        message: "Contents of User",
+        userContents,
+      });
+    } else {
+      res.status(400).json({
+        message: "invalid link",
+      });
+    }
   } catch (error) {
-    res.status(200).json({
-      message:"Link already Exists"
-    })
+    res.send("error");
   }
-
-})
+});
 
 app.listen(3000, () => {
   console.log("server running succesfull");

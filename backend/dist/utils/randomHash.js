@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const randomHash = (len) => {
-    const options = 'qwertyuiopasdfghjklzxcvbnm1234567890';
-    let random = "";
+    let options = "qwertyuiopasdfghjklzxcvbnm1234567890";
+    let length = options.length;
+    let randomString = "";
     for (let i = 0; i < len; i++) {
-        random = options[Math.floor(Math.random() * options.length)] + random;
+        randomString += options[Math.floor(Math.random() * length)];
     }
-    return random;
+    return randomString;
 };
 exports.default = randomHash;

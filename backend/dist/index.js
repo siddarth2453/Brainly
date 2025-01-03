@@ -157,30 +157,74 @@ app.delete("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __a
 }));
 app.post("/api/v1/brain/share", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const share = req.body.share;
+        const { share } = req.body;
         if (share) {
-            yield schema_1.LinkModel.create({
-                hash: (0, randomHash_1.default)(10),
-                userId: req.userId
+            const existingUser = yield schema_1.LinkModel.findOne({
+                userId: req.userId,
             });
+            if (existingUser) {
+                res.status(409).json({
+                    message: "Already Link Exists",
+                    hash: existingUser.hash,
+                });
+            }
+            else {
+                const hash = (0, randomHash_1.default)(10);
+                yield schema_1.LinkModel.create({
+                    hash,
+                    userId: req.userId,
+                });
+                res.status(200).json({
+                    message: "success creating sharable link",
+                    hash,
+                });
+            }
+        }
+        else {
+            const deletedLink = yield schema_1.LinkModel.deleteOne({
+                userId: req.userId,
+            });
+            if (deletedLink.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Deleted",
+                });
+            }
+            else {
+                res.status(400).json({
+                    message: "Wrong input",
+                });
+            }
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Something went wrong!",
+        });
+    }
+}));
+app.get("/api/v1/brain/:share", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { share } = req.params;
+    try {
+        const LinkInfo = yield schema_1.LinkModel.findOne({
+            hash: share,
+        });
+        if (LinkInfo) {
+            const userContents = yield schema_1.ContentModel.find({
+                userId: LinkInfo.userId,
+            }).populate("userId", "username");
             res.status(200).json({
-                message: "Generated Sharable Link",
-                userId: req.userId
+                message: "Contents of User",
+                userContents,
             });
         }
         else {
-            yield schema_1.LinkModel.deleteOne({
-                userId: req.userId
-            });
-            res.status(200).json({
-                message: "Deleted Sharable Link"
+            res.status(400).json({
+                message: "invalid link",
             });
         }
     }
     catch (error) {
-        res.status(200).json({
-            message: "Link already Exists"
-        });
+        res.send("error");
     }
 }));
 app.listen(3000, () => {
