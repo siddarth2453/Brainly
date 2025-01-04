@@ -4,7 +4,8 @@ interface ButtonProps  {
     text:String,
     variant: "primary" | "secondary",
     size: "sm" | "md" | "lg",
-    startIcon:ReactElement
+    startIcon?:ReactElement,
+    changeIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const variantStyle = {
@@ -22,7 +23,7 @@ const sizeStyle = {
 
 const Button = (props:ButtonProps) => {
   return (
-    <button className= {variantStyle[props.variant] + sizeStyle[props.size] +" rounded-lg w-fit flex items-center gap-2"}>
+    <button onClick={() => props.changeIsOpen(prev => !prev)} className= {variantStyle[props.variant] + sizeStyle[props.size] +" rounded-lg w-fit flex items-center gap-2"}>
         {props.startIcon} {props.text} 
     </button>
   )

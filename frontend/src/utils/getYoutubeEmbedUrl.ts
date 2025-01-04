@@ -1,4 +1,4 @@
-export function getEmbedUrl(youtubeUrl:string) {
+export function getYoutubeEmbedUrl(youtubeUrl:string) {
     let videoId;
     const url = new URL(youtubeUrl);
 
@@ -12,7 +12,7 @@ export function getEmbedUrl(youtubeUrl:string) {
     }
 
     // Return the embed URL if videoId is found
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : "N/A";
 }
 
 
