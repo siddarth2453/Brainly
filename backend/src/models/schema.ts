@@ -16,7 +16,7 @@ const UserSchema = new Schema ({
         type:String,
         unique:true,
         required:true
-    }
+    },
 })
 
 export const UserModel = mongoose.model("User", UserSchema) 

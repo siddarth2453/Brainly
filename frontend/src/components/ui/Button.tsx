@@ -1,8 +1,10 @@
+import { ReactElement } from "react"
+
 interface ButtonProps  {
     text:String,
     variant: "primary" | "secondary",
     size: "sm" | "md" | "lg",
-    
+    startIcon:ReactElement
 }
 
 const variantStyle = {
@@ -18,11 +20,10 @@ const sizeStyle = {
 
 
 
-
 const Button = (props:ButtonProps) => {
   return (
-    <button className= {variantStyle[props.variant] + sizeStyle[props.size] +" rounded-lg w-fit"}>
-        {props.text} 
+    <button className= {variantStyle[props.variant] + sizeStyle[props.size] +" rounded-lg w-fit flex items-center gap-2"}>
+        {props.startIcon} {props.text} 
     </button>
   )
 }
