@@ -21,7 +21,7 @@ const UserSchema = new mongoose_2.Schema({
         type: String,
         unique: true,
         required: true
-    }
+    },
 });
 exports.UserModel = mongoose_1.default.model("User", UserSchema);
 const contentTypes = ['image', 'video', 'article', 'audio'];
