@@ -6,10 +6,10 @@ import Modal from "../components/ui/Modal";
 import { useState } from "react";
 
 const Dashborard = () => {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   return (
-  <>
-  <Modal
+    <>
+      <Modal
         value={isOpen}
         changeIsOpen={() => {
           setIsOpen(false);
@@ -46,9 +46,9 @@ const Dashborard = () => {
             type="tweet"
           />
         </div>
-      </div></>
-    
-  )
-}
+      </div>
+    </>
+  );
+};
 
-export default Dashborard
+export default Dashborard;
