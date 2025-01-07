@@ -12,8 +12,8 @@ const Dashborard = () => {
       <div>
         <Modal
           value={isOpen}
-          changeIsOpen={() => {
-            setIsOpen(false);
+          onClickFn={() => {
+            setIsOpen(false); 
           }}
         />
         <div className="bg-background min-w-screen min-h-screen">
@@ -23,7 +23,7 @@ const Dashborard = () => {
               size="sm"
               text="Add New"
               startIcon={<PlusIcon />}
-              changeIsOpen={() => {
+              OnClickFn={() => {
                 setIsOpen(true);
               }}
             />

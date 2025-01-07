@@ -1,11 +1,10 @@
-import React from "react";
 import CloseIcon from "../icons/CloseIcon";
 import InputBox from "./InputBox";
 import Button from "./Button";
 
 interface ModalProps {
     value: boolean;
-    changeIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onClickFn: () => void;
 }
 
 const Modal = (props: ModalProps) => {
@@ -17,7 +16,7 @@ const Modal = (props: ModalProps) => {
         >
             <div className="w-80 h-96 md:w-96 bg-secondary rounded-lg">
                 <div className="h-14 flex justify-end p-3">
-                    <div className="cursor-pointer" onClick={() => props.changeIsOpen(prev => !prev)}>
+                    <div className="cursor-pointer" onClick={props.onClickFn}>
                     < CloseIcon/>
                     </div>
                 </div>
