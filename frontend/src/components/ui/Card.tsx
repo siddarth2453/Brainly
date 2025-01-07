@@ -1,11 +1,10 @@
-
-import { TwitterTweetEmbed } from "react-twitter-embed"
+import getTweet from "../../utils/getTweet"
 import { getYoutubeEmbedUrl } from "../../utils/getYoutubeEmbedUrl"
 import DeleteIcon from "../icons/DeleteIcon"
 import ShareIcon from "../icons/ShareIcon"
 import TwitterIcon from "../icons/TwitterIcon"
 import YoutubeIcon from "../icons/YoutubeIcon"
-import { getTweetId } from "../../utils/getTwitterId"
+import TweetEmbed from "./TweetEmbed"
 
 
 interface CardProps {
@@ -20,7 +19,7 @@ const Card = (props:CardProps) => {
   if(props.type == "youtube"){
     link = getYoutubeEmbedUrl(props.link)
   }else{
-    link = getTweetId(props.link)
+    link = getTweet(props.link)
   }
   return (
     <div className="min-w-80 min-h-60  rounded-lg bg-secondary overflow-hidden">
@@ -37,7 +36,7 @@ const Card = (props:CardProps) => {
         </div>
        </div>
       <div className="w-full h-full p-3">
-      {props.type=="youtube" ? <iframe className="rounded-lg" src={link ? link : "N/A"} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>: link ? <TwitterTweetEmbed tweetId={link} /> : <p>Invalid Tweet ID</p>}
+      {props.type=="youtube" ? <iframe className="rounded-lg" src={link ? link : "N/A"} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>: link ? <TweetEmbed url={link} /> : <p>Invalid Tweet ID</p>}
       </div>
     </div>
   )
