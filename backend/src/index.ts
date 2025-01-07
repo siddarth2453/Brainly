@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userMiddleware } from "./middlewares/userMiddleware";
 import randomHash from "./utils/randomHash";
+import cors from 'cors'
 
 declare global {
   namespace Express {
@@ -14,9 +15,15 @@ declare global {
   }
 }
 
-const JWT_SECRET = "TOPSECRET";
+
 
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173", 
+  methods: ["GET", "POST", "PUT", "DELETE"], 
+  credentials: true, 
+}));
 
 app.use(express.json());
 
@@ -64,7 +71,10 @@ app.post("/api/v1/signin", async (req, res) => {
       const isMatch = await bcrypt.compare(password, existingUser.password);
 
       if (isMatch) {
-        const token = jwt.sign({ id: existingUser._id }, JWT_SECRET);
+        if (!process.env.JWT_SECRET) {
+          throw new Error("JWT_SECRET is not defined");
+        }
+        const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET);
 
         res.status(200).json({
           message: "user signed in",

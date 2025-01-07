@@ -24,7 +24,7 @@ const UserSchema = new mongoose_2.Schema({
     },
 });
 exports.UserModel = mongoose_1.default.model("User", UserSchema);
-const contentTypes = ['image', 'video', 'article', 'audio'];
+const contentTypes = ['tweet', 'youtube', 'article', 'audio'];
 const ContentSchema = new mongoose_2.Schema({
     link: {
         type: String,

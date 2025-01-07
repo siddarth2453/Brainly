@@ -10,7 +10,7 @@ interface ModalProps {
 const Modal = (props: ModalProps) => {
     return (
         <div
-            className={`h-full w-full bg-black bg-opacity-50 fixed top-0 left-0 flex justify-center items-center ${
+            className={`h-full w-full bg-black bg-opacity-50 fixed top-0 left-0 flex justify-center items-center z-20 ${
                 props.value ? " " : " hidden "
             }`}
         >
@@ -21,8 +21,8 @@ const Modal = (props: ModalProps) => {
                     </div>
                 </div>
                 <div className="w-full flex flex-col items-center gap-4">
-                    <InputBox placeholder="Enter your Title"/>
-                    <InputBox placeholder="Enter Link"/>
+                    <InputBox placeholder="Enter your Title" type="text" required={true}/>
+                    <InputBox placeholder="Enter Link" type="text" required={true}/>
                     <div><label htmlFor="type">Type:</label>
                     <select className="py-2 px-3 mx-2 rounded-lg" name="type" id="type">
                         <option  value="youtube">Youtube</option>

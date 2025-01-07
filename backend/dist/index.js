@@ -19,8 +19,13 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userMiddleware_1 = require("./middlewares/userMiddleware");
 const randomHash_1 = __importDefault(require("./utils/randomHash"));
-const JWT_SECRET = "TOPSECRET";
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+}));
 app.use(express_1.default.json());
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -60,7 +65,10 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         if (existingUser) {
             const isMatch = yield bcrypt_1.default.compare(password, existingUser.password);
             if (isMatch) {
-                const token = jsonwebtoken_1.default.sign({ id: existingUser._id }, JWT_SECRET);
+                if (!process.env.JWT_SECRET) {
+                    throw new Error("JWT_SECRET is not defined");
+                }
+                const token = jsonwebtoken_1.default.sign({ id: existingUser._id }, process.env.JWT_SECRET);
                 res.status(200).json({
                     message: "user signed in",
                     token,

@@ -24,7 +24,7 @@ const Card = (props:CardProps) => {
   return (
     <div className="min-w-80 min-h-60  rounded-lg bg-secondary overflow-hidden">
       <div className="py-3  bg-opacity-50 flex gap-1 items-center justify-between px-3">
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center ">
         {props.type=="youtube" ? <YoutubeIcon/> : <TwitterIcon/>}
         <h1 className=" text-black font-semibold text-md">{props.title}</h1>
         </div>
