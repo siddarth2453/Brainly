@@ -18,8 +18,6 @@
 
 const getTweet = (link:string) => {
  const updatedLink = link.replace("x.com" , "twitter.com")
- console.log(updatedLink);
- 
  return updatedLink
 }
 
