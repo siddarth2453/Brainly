@@ -15,6 +15,9 @@
     "react-router": "^7.1.1",
     "react-social-media-embed": "^2.5.17"
   },
+  "engines": {
+    "node": "20.16"
+  },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@types/react": "^18.3.18",
