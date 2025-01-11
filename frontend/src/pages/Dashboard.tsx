@@ -1,12 +1,38 @@
 import Card from "../components/ui/Card";
 import Modal from "../components/ui/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/ui/Sidebar";
 import DashNav from "../components/ui/DashNav";
+import axios from "axios";
 
-const Dashborard = () => {
+const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [contents, setContents] = useState<any[]>([]);
+
+  const token = localStorage.getItem("token");
+
+  interface ContentResponse {
+    contents: any[];
+  }
+
+  const fetchContents = async () => {
+    const response = await axios.get<ContentResponse>(
+      "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    const data = response.data.contents;
+    setContents(data);
+  };
+
+  useEffect(() => {
+    fetchContents();
+  }, []);
+
   return (
     <>
       <div>
@@ -26,7 +52,7 @@ const Dashborard = () => {
           }}
         />
         <div
-          className={`bg-background min-w-screen min-h-screen ${
+          className={`min-w-screen min-h-screen ${
             menuOpen ? "lg:ml-72" : ""
           }`}>
           <div className="py-5">
@@ -39,22 +65,23 @@ const Dashborard = () => {
           </div>
 
           <div className="w-full h-full  text-primary flex flex-wrap items-start justify-center p-3 gap-4">
-            <Card
-              title="This is my first video"
-              link="https://youtu.be/VUYwFMgtwoM"
-              type="youtube"
-            />
-
-            <Card
-              title="This is my first tweet"
-              link="https://x.com/shashankx02/status/1852335728757244215"
-              type="tweet"
-            />
+            {contents.map((content, index) => {
+              return (
+                <Card
+                  key={index}
+                  title={content.title}
+                  link={content.link}
+                  type={content.type}
+                />
+              );
+            })}
           </div>
+
+          
         </div>
       </div>
     </>
   );
 };
 
-export default Dashborard;
+export default Dashboard;

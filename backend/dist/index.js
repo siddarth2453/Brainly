@@ -22,6 +22,7 @@ const randomHash_1 = __importDefault(require("./utils/randomHash"));
 const cors_1 = __importDefault(require("cors"));
 const zodValidation_1 = require("./utils/zodValidation");
 const zod_1 = require("zod");
+const contentMiddleware_1 = __importDefault(require("./middlewares/contentMiddleware"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: [
@@ -124,14 +125,13 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
     }
 }));
-app.post("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/api/v1/content", userMiddleware_1.userMiddleware, contentMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { link, type, title, tags } = req.body;
+        const { link, type, title } = req.body;
         yield schema_1.ContentModel.create({
             link,
             type,
             title,
-            tags,
             userId: req.userId,
         });
         res.status(200).json({
@@ -139,9 +139,10 @@ app.post("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awa
         });
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             message: "something went wrong",
         });
+        console.error(error);
     }
 }));
 app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -8,6 +8,7 @@ import randomHash from "./utils/randomHash";
 import cors from "cors";
 import { signupSchema, signinSchema } from "./utils/zodValidation";
 import { z } from "zod";
+import contentMiddleware from "./middlewares/contentMiddleware";
 
 declare global {
   namespace Express {
@@ -130,15 +131,14 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 });
 
-app.post("/api/v1/content", userMiddleware, async (req, res) => {
+app.post("/api/v1/content", userMiddleware,contentMiddleware, async (req, res) => {
   try {
-    const { link, type, title, tags } = req.body;
+    const { link, type, title } = req.body;
 
     await ContentModel.create({
       link,
       type,
       title,
-      tags,
       userId: req.userId,
     });
 
@@ -146,9 +146,10 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
       message: "Content Added",
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       message: "something went wrong",
     });
+    console.error(error)
   }
 });
 

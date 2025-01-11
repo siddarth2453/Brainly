@@ -1,5 +1,3 @@
-import getTweet from "../../utils/getTweet";
-import { getYoutubeEmbedUrl } from "../../utils/getYoutubeEmbedUrl";
 import DeleteIcon from "../icons/DeleteIcon";
 import ShareIcon from "../icons/ShareIcon";
 import TwitterIcon from "../icons/TwitterIcon";
@@ -13,12 +11,8 @@ interface CardProps {
 }
 
 const Card = (props: CardProps) => {
-  let link;
-  if (props.type == "youtube") {
-    link = getYoutubeEmbedUrl(props.link);
-  } else {
-    link = getTweet(props.link);
-  }
+  let link=props.link;
+ 
   return (
     <div className="min-w-80 min-h-60  rounded-lg bg-secondary overflow-hidden">
       <div className="py-3  bg-opacity-50 flex gap-1 items-center justify-between px-3">

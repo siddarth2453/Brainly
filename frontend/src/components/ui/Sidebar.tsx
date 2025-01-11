@@ -17,12 +17,12 @@ const Sidebar = (props: SidebarType) => {
     <div
       className={` transition-all duration-700 ease-in-out ${
         props.menuOpen ? "block" : "hidden"
-      }  w-80 h-screen bg-white px-6 py-4 fixed top-0 left-0 border-3 border-r  `}>
+      }  w-80 h-screen bg-white bg-opacity-50 px-6 py-4 fixed top-0 left-0 border-3 border-r rounded-lg `}>
       <div className="flex justify-between">
         <div className="flex gap-2 justify-start items-center mb-6">
           <img
             className="w-[2rem]"
-            src="src/assets/images/logo.png"
+            src="/images/logo.png"
             alt="logo"
           />
           <h1 className="text-2xl font-bold text-primary">Brainly</h1>
