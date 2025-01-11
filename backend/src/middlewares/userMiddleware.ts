@@ -19,7 +19,7 @@ export const userMiddleware = (
       next();
     } else {
       res.status(401).json({
-        message: "You are Unauthorised / No header provided",
+        message: "Please SignIn first to add your Brain",
       });
     }
   } catch (error) {
