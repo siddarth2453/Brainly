@@ -24,9 +24,12 @@ const zodValidation_1 = require("./utils/zodValidation");
 const zod_1 = require("zod");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "https://brainlybybeast.vercel.app/"],
+    origin: [
+        "http://localhost:5173", // Localhost frontend
+        "https://brainlybybeast.vercel.app", // Production frontend
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    credentials: true, // Allow credentials (cookies or JWT tokens)
 }));
 app.use(express_1.default.json());
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

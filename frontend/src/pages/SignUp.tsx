@@ -24,7 +24,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post<{ message: string }>(
-        `http://localhost:3000/api/v1/signup`,
+        `https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/signup`,
         {
           username,
           email,
