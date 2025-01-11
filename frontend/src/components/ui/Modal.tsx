@@ -7,6 +7,7 @@ import axios from "axios";
 interface ModalProps {
   value: boolean;
   onClickFn: () => void;
+  onSubmitFn:()=>void;
 }
  
 const Modal = (props: ModalProps) => {
@@ -16,11 +17,11 @@ const Modal = (props: ModalProps) => {
 
   const onSubmit = async () => {
     const token = localStorage.getItem("token");
-
     const title = titleRef.current?.value;
     const link = linkRef.current?.value;
     const type = (document.getElementById("type") as HTMLSelectElement)?.value;
     
+    props.onSubmitFn();
 
     interface ResponseData {
       message: string;
@@ -41,6 +42,9 @@ const Modal = (props: ModalProps) => {
         }
       );
      // Success - Set the success message
+
+    
+
      setMessage(response.data?.message || "Content added successfully.");
     } catch (error: any) {
       // Error - Set the error message

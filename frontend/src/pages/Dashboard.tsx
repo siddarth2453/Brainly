@@ -16,7 +16,7 @@ const Dashboard = () => {
     contents: any[];
   }
 
-  const fetchContents = async () => {
+   const fetchContents = async () => {
     const response = await axios.get<ContentResponse>(
       "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
       {
@@ -38,6 +38,8 @@ const Dashboard = () => {
       <div>
         <Modal
           value={isOpen}
+          onSubmitFn={fetchContents}
+
           onClickFn={() => {
             setIsOpen(false);
           }}
@@ -52,9 +54,7 @@ const Dashboard = () => {
           }}
         />
         <div
-          className={`min-w-screen min-h-screen ${
-            menuOpen ? "lg:ml-72" : ""
-          }`}>
+          className={`min-w-screen min-h-screen ${menuOpen ? "lg:ml-72" : ""}`}>
           <div className="py-5">
             <DashNav
               menuOpen={menuOpen}
@@ -65,19 +65,23 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full h-full  text-primary flex flex-wrap items-start justify-center p-3 gap-4">
-            {contents.map((content, index) => {
-              return (
-                <Card
-                  key={index}
-                  title={content.title}
-                  link={content.link}
-                  type={content.type}
-                />
-              );
-            })}
+            {contents.length === 0 ? (
+              <div className="text-center flex justify-center items-center font-semibold text-xl h-[70vh]">
+                <p>No contents available yet! Open Menu to add content.</p>
+              </div>
+            ) : (
+              <div className="w-full h-full text-primary flex flex-wrap items-start justify-center p-3 gap-4">
+                {contents.map((content, index) => (
+                  <Card
+                    key={index}
+                    title={content.title}
+                    link={content.link}
+                    type={content.type}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-
-          
         </div>
       </div>
     </>
