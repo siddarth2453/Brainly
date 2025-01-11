@@ -5,7 +5,9 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userMiddleware } from "./middlewares/userMiddleware";
 import randomHash from "./utils/randomHash";
-import cors from 'cors'
+import cors from "cors";
+import { signupSchema, signinSchema } from "./utils/zodValidation";
+import { z } from "zod";
 
 declare global {
   namespace Express {
@@ -15,49 +17,65 @@ declare global {
   }
 }
 
-
-
 const app = express();
 
-app.use(cors({
-  origin: ["http://localhost:5173","https://brainlybybeast.vercel.app/"], 
-  methods: ["GET", "POST", "PUT", "DELETE"], 
-  credentials: true, 
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://brainlybybeast.vercel.app/"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
 app.post("/api/v1/signup", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    // Validate the request body using Zod
+    const { username, email, password } = signupSchema.parse(req.body);
 
-    const exsitingUser = await UserModel.findOne({
-      email,
-    });
+    const existingUsername = await UserModel.findOne({ username });
 
-    if (!exsitingUser) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      await UserModel.create({
-        username,
-        email,
-        password: hashedPassword,
-      });
-
-      res.status(201).json({
-        message: "user signed up succesfully!",
-        username,
+    if (existingUsername) {
+      res.status(403).json({
+        message: "Username already taken, try other username",
+        username: existingUsername,
       });
     } else {
-      res.status(403).json({
-        message: "account already exists",
-        username: exsitingUser.username,
-      });
+      const existingUser = await UserModel.findOne({ email });
+
+      if (!existingUser) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await UserModel.create({
+          username,
+          email,
+          password: hashedPassword,
+        });
+
+        res.status(201).json({
+          message: "User signed up successfully!",
+          username,
+        });
+      } else {
+        res.status(403).json({
+          message: "Account already exists",
+          username: existingUser.username,
+        });
+      }
     }
   } catch (error) {
-    res.status(500).json({
-      message: "something went wrong",
-    });
+    if (error instanceof z.ZodError) {
+      // Handle validation errors
+      res.status(400).json({
+        message: "Validation error",
+        errors: error.errors, // Contains detailed validation errors
+      });
+    } else {
+      res.status(500).json({
+        message: "Something went wrong",
+      });
+    }
   }
 });
 
@@ -74,7 +92,10 @@ app.post("/api/v1/signin", async (req, res) => {
         if (!process.env.JWT_SECRET) {
           throw new Error("JWT_SECRET is not defined");
         }
-        const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET);
+        const token = jwt.sign(
+          { id: existingUser._id },
+          process.env.JWT_SECRET
+        );
 
         res.status(200).json({
           message: "user signed in",
@@ -92,9 +113,17 @@ app.post("/api/v1/signin", async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
-      message: " Something went wrong! | server error",
-    });
+    if (error instanceof z.ZodError) {
+      // Handle validation errors
+      res.status(400).json({
+        message: "Validation error",
+        errors: error.errors, // Contains detailed validation errors
+      });
+    } else {
+      res.status(500).json({
+        message: "Something went wrong",
+      });
+    }
   }
 });
 
@@ -107,7 +136,6 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
       type,
       title,
       tags,
-      //@ts-ignore
       userId: req.userId,
     });
 
@@ -123,7 +151,7 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
 
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
   try {
-    //@ts-ignore
+
     const userId = req.userId;
 
     const contents = await ContentModel.find({
@@ -143,7 +171,6 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
     res.status(500).json({
       error,
     });
-    console.log(error);
   }
 });
 
@@ -224,7 +251,6 @@ app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
 app.get("/api/v1/brain/:share", async (req, res) => {
   const { share } = req.params;
   try {
-
     const LinkInfo = await LinkModel.findOne({
       hash: share,
     });

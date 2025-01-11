@@ -6,7 +6,7 @@ import DashNav from "../components/ui/DashNav";
 
 const Dashborard = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [menuOpen ,setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <>
       <div>
@@ -16,14 +16,28 @@ const Dashborard = () => {
             setIsOpen(false);
           }}
         />
-        <Sidebar setModal={() => {setIsOpen(true)}} menuOpen={menuOpen} setMenuOpen={() =>{setMenuOpen(false)}}/>
-        <div className={`bg-background min-w-screen min-h-screen ${menuOpen ? 'lg:ml-72' : ""}`}>
-
+        <Sidebar
+          setModal={() => {
+            setIsOpen(true);
+          }}
+          menuOpen={menuOpen}
+          setMenuOpen={() => {
+            setMenuOpen(false);
+          }}
+        />
+        <div
+          className={`bg-background min-w-screen min-h-screen ${
+            menuOpen ? "lg:ml-72" : ""
+          }`}>
           <div className="py-5">
-          <DashNav menuOpen={menuOpen} setMenuOpen={() =>{setMenuOpen(true)}} />
+            <DashNav
+              menuOpen={menuOpen}
+              setMenuOpen={() => {
+                setMenuOpen(true);
+              }}
+            />
           </div>
 
-          
           <div className="w-full h-full  text-primary flex flex-wrap items-start justify-center p-3 gap-4">
             <Card
               title="This is my first video"

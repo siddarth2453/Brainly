@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/middlewares/usermiddleware.ts","./src/models/schema.ts","./src/utils/db.ts","./src/utils/randomhash.ts"],"version":"5.6.2"}
+{"root":["./src/index.ts","./src/middlewares/usermiddleware.ts","./src/models/schema.ts","./src/utils/db.ts","./src/utils/randomhash.ts","./src/utils/zodvalidation.ts"],"version":"5.6.2"}

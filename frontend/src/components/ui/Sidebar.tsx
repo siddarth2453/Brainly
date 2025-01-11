@@ -18,14 +18,11 @@ const Sidebar = (props: SidebarType) => {
       className={` transition-all duration-700 ease-in-out ${
         props.menuOpen ? "block" : "hidden"
       }  w-80 h-screen bg-white px-6 py-4 fixed top-0 left-0 border-3 border-r  `}>
-
-
-        
       <div className="flex justify-between">
         <div className="flex gap-2 justify-start items-center mb-6">
           <img
             className="w-[2rem]"
-            src="https://cdn.discordapp.com/attachments/1225854231169466539/1326215759369736243/logo.png?ex=677e9e2c&is=677d4cac&hm=a8c5e5bcea7e25dd57b7ff3e5643f00f1f6274899f49d0dd94698a9501340d93&"
+            src="src/assets/images/logo.png"
             alt="logo"
           />
           <h1 className="text-2xl font-bold text-primary">Brainly</h1>
@@ -38,8 +35,6 @@ const Sidebar = (props: SidebarType) => {
           <CloseIcon />
         </div>
       </div>
-
-      
 
       <SidebarItems startIcon={<TwitterIcon />} text="Tweets" />
       <SidebarItems startIcon={<YoutubeIcon />} text="Youtube" />
@@ -59,9 +54,7 @@ const Sidebar = (props: SidebarType) => {
           startIcon={<ShareIcon />}
         />
       </div>
-
     </div>
-    
   );
 };
 

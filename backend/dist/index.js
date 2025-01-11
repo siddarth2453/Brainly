@@ -20,42 +20,61 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const userMiddleware_1 = require("./middlewares/userMiddleware");
 const randomHash_1 = __importDefault(require("./utils/randomHash"));
 const cors_1 = __importDefault(require("cors"));
+const zodValidation_1 = require("./utils/zodValidation");
+const zod_1 = require("zod");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://brainlybybeast.vercel.app/"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));
 app.use(express_1.default.json());
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username, email, password } = req.body;
-        const exsitingUser = yield schema_1.UserModel.findOne({
-            email,
-        });
-        if (!exsitingUser) {
-            const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-            yield schema_1.UserModel.create({
-                username,
-                email,
-                password: hashedPassword,
-            });
-            res.status(201).json({
-                message: "user signed up succesfully!",
-                username,
+        // Validate the request body using Zod
+        const { username, email, password } = zodValidation_1.signupSchema.parse(req.body);
+        const existingUsername = yield schema_1.UserModel.findOne({ username });
+        if (existingUsername) {
+            res.status(403).json({
+                message: "Username already taken, try other username",
+                username: existingUsername,
             });
         }
         else {
-            res.status(403).json({
-                message: "account already exists",
-                username: exsitingUser.username,
-            });
+            const existingUser = yield schema_1.UserModel.findOne({ email });
+            if (!existingUser) {
+                const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+                yield schema_1.UserModel.create({
+                    username,
+                    email,
+                    password: hashedPassword,
+                });
+                res.status(201).json({
+                    message: "User signed up successfully!",
+                    username,
+                });
+            }
+            else {
+                res.status(403).json({
+                    message: "Account already exists",
+                    username: existingUser.username,
+                });
+            }
         }
     }
     catch (error) {
-        res.status(500).json({
-            message: "something went wrong",
-        });
+        if (error instanceof zod_1.z.ZodError) {
+            // Handle validation errors
+            res.status(400).json({
+                message: "Validation error",
+                errors: error.errors, // Contains detailed validation errors
+            });
+        }
+        else {
+            res.status(500).json({
+                message: "Something went wrong",
+            });
+        }
     }
 }));
 app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,9 +107,18 @@ app.post("/api/v1/signin", (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
     }
     catch (error) {
-        res.status(500).json({
-            message: " Something went wrong! | server error",
-        });
+        if (error instanceof zod_1.z.ZodError) {
+            // Handle validation errors
+            res.status(400).json({
+                message: "Validation error",
+                errors: error.errors, // Contains detailed validation errors
+            });
+        }
+        else {
+            res.status(500).json({
+                message: "Something went wrong",
+            });
+        }
     }
 }));
 app.post("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -101,7 +129,6 @@ app.post("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awa
             type,
             title,
             tags,
-            //@ts-ignore
             userId: req.userId,
         });
         res.status(200).json({
@@ -116,7 +143,6 @@ app.post("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awa
 }));
 app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        //@ts-ignore
         const userId = req.userId;
         const contents = yield schema_1.ContentModel.find({
             userId,
@@ -136,7 +162,6 @@ app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awai
         res.status(500).json({
             error,
         });
-        console.log(error);
     }
 }));
 app.delete("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

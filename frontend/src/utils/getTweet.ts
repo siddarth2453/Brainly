@@ -14,11 +14,9 @@
 //   return tweetId ? tweetId : "N/A";
 // }
 
+const getTweet = (link: string) => {
+  const updatedLink = link.replace("x.com", "twitter.com");
+  return updatedLink;
+};
 
-
-const getTweet = (link:string) => {
- const updatedLink = link.replace("x.com" , "twitter.com")
- return updatedLink
-}
-
-export default getTweet
+export default getTweet;

@@ -1,6 +1,6 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 
-const TweetEmbed = ( props:{url:string} ) => {
+const TweetEmbed = (props: { url: string }) => {
   useEffect(() => {
     // Load the Twitter script dynamically if it's not already loaded
     const scriptId = "twitter-wjs";
