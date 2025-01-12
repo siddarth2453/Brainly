@@ -1,5 +1,4 @@
 import DeleteIcon from "../icons/DeleteIcon";
-import ShareIcon from "../icons/ShareIcon";
 import TwitterIcon from "../icons/TwitterIcon";
 import YoutubeIcon from "../icons/YoutubeIcon";
 import TweetEmbed from "./TweetEmbed";
@@ -8,7 +7,9 @@ interface CardProps {
   title: string;
   link: string;
   type: "youtube" | "tweet";
+  deleteFn:() =>void
 }
+
 
 const Card = (props: CardProps) => {
   let link=props.link;
@@ -21,10 +22,10 @@ const Card = (props: CardProps) => {
           <h1 className=" text-black font-semibold text-md">{props.title}</h1>
         </div>
         <div className="flex gap-3 items-center text-gray-700">
-          <div className="cursor-pointer">
+          {/* <div className="cursor-pointer">
             <ShareIcon />
-          </div>
-          <div className="cursor-pointer">
+          </div> */}
+          <div className="cursor-pointer hover:text-red-500 transition-all duration-200" onClick={props.deleteFn}>
             <DeleteIcon />
           </div>
         </div>

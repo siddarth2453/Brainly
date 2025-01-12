@@ -20,8 +20,6 @@ const Modal = (props: ModalProps) => {
     const title = titleRef.current?.value;
     const link = linkRef.current?.value;
     const type = (document.getElementById("type") as HTMLSelectElement)?.value;
-    
-    props.onSubmitFn();
 
     interface ResponseData {
       message: string;
@@ -56,6 +54,7 @@ const Modal = (props: ModalProps) => {
         setMessage(error.message);
       }
     }
+    props.onSubmitFn();
   };
   
 

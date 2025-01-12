@@ -6,11 +6,12 @@ interface ButtonProps {
   size: "sm" | "md" | "lg";
   startIcon?: ReactElement;
   OnClickFn?: () => void;
+  disabled?:boolean
 }
 
 const variantStyle = {
-  primary: "bg-primary text-white",
-  secondary: "bg-secondary text-primary",
+  primary: "bg-primary text-white hover:bg-white hover:outline outline-1 hover:text-primary  transition duration-300 ease-in-out",
+  secondary: "bg-secondary text-primary hover:bg-purple-600 hover:outline outline-1 hover:text-white transition duration-300 ease-in-out",
 };
 
 const sizeStyle = {
@@ -26,7 +27,7 @@ const Button = (props: ButtonProps) => {
       className={
         variantStyle[props.variant] +
         sizeStyle[props.size] +
-        " rounded-lg w-fit flex items-center gap-2"
+        " rounded-lg w-fit flex items-center gap-2 "
       }>
       {props.startIcon} {props.text}
     </button>

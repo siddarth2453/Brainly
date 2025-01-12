@@ -23,11 +23,11 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",  // Localhost frontend
-      "https://brainlybybeast.vercel.app",  // Production frontend
+      "http://localhost:5173", // Localhost frontend
+      "https://brainlybybeast.vercel.app", // Production frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,  // Allow credentials (cookies or JWT tokens)
+    credentials: true, // Allow credentials (cookies or JWT tokens)
   })
 );
 
@@ -131,31 +131,46 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 });
 
-app.post("/api/v1/content", userMiddleware,contentMiddleware, async (req, res) => {
-  try {
-    const { link, type, title } = req.body;
+app.post(
+  "/api/v1/content",
+  userMiddleware,
+  contentMiddleware,
+  async (req, res) => {
+    try {
+      const { link, type, title } = req.body;
 
-    await ContentModel.create({
-      link,
-      type,
-      title,
-      userId: req.userId,
-    });
+      const existLink = await ContentModel.find({
+        link,
+        userId: req.userId,
+      });
 
-    res.status(200).json({
-      message: "Content Added",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "something went wrong",
-    });
-    console.error(error)
+      if (existLink.length > 0) {
+        res.status(409).json({
+          message: "Content already exists",
+        });
+      } else {
+        await ContentModel.create({
+          link,
+          type,
+          title,
+          userId: req.userId,
+        });
+
+        res.status(200).json({
+          message: "Content Added",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "something went wrong",
+      });
+      console.error(error);
+    }
   }
-});
+);
 
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
   try {
-
     const userId = req.userId;
 
     const contents = await ContentModel.find({
@@ -216,6 +231,7 @@ app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
         res.status(409).json({
           message: "Already Link Exists",
           hash: existingUser.hash,
+          userId:existingUser.userId
         });
       } else {
         const hash = randomHash(10);
@@ -223,6 +239,7 @@ app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
         await LinkModel.create({
           hash,
           userId: req.userId,
+          isShare:true
         });
 
         res.status(200).json({
@@ -233,6 +250,7 @@ app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
     } else {
       const deletedLink = await LinkModel.deleteOne({
         userId: req.userId,
+        isShare:false
       });
 
       if (deletedLink.deletedCount > 0) {
@@ -277,6 +295,7 @@ app.get("/api/v1/brain/:share", async (req, res) => {
     res.send("error");
   }
 });
+
 
 app.listen(3000, () => {
   console.log("server running succesfull");

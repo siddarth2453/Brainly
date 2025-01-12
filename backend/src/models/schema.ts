@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { Schema } from 'mongoose'
+import { boolean, string } from 'zod';
 
 const UserSchema = new Schema ({
     username: {
@@ -53,6 +54,10 @@ export const ContentModel = mongoose.model("Content" , ContentSchema)
 const LinkSchema = new Schema ({
     hash: {
         type:String,
+    },
+    isShare:{
+      type:Boolean,
+      default:false  
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId, ref: 'User',
