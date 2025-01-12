@@ -78,7 +78,7 @@ const Dashboard = () => {
           }}
         />
         <div
-          className={`min-w-screen min-h-screen ${menuOpen ? "lg:ml-72" : ""}`}>
+          className={`min-w-screen min-h-screen `}>
           <div className="py-5 ">
             <DashNav
               menuOpen={menuOpen}
