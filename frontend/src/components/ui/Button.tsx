@@ -6,7 +6,6 @@ interface ButtonProps {
   size: "sm" | "md" | "lg";
   startIcon?: ReactElement;
   OnClickFn?: () => void;
-  disabled?:boolean
 }
 
 const variantStyle = {

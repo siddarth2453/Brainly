@@ -31,7 +31,7 @@ const Home = () => {
         <img
           className="w-[70%] md:w-[30rem] lg:w-[40rem] lg:ml-[8rem]"
           src={
-            "https://cdn.discordapp.com/attachments/1225854231169466539/1325892801967165440/69e82821-1b95-4818-ab11-90234836b1de.png?ex=677d7165&is=677c1fe5&hm=6e4dd8e9653d57bb71a11e0c182bed9b1e3788e0b6da5c6c7c061e9a7fd821e2&"
+            "./images/HeroImage.png"
           }
           alt="Hero Image"
         />

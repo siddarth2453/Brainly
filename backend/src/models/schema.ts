@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import { Schema } from 'mongoose'
-import { boolean, string } from 'zod';
 
 const UserSchema = new Schema ({
     username: {
@@ -18,6 +17,10 @@ const UserSchema = new Schema ({
         unique:true,
         required:true
     },
+    isPublic:{
+        type:Boolean,
+        default:false
+    }
 })
 
 export const UserModel = mongoose.model("User", UserSchema) 
@@ -45,25 +48,11 @@ const ContentSchema = new Schema ({
     userId:{
         type:mongoose.Schema.Types.ObjectId, ref: 'User',
         required:true
+    },
+    username:{
+        type:String, ref: 'User',
+        required:true
     }
 })
 
-export const ContentModel = mongoose.model("Content" , ContentSchema)
-
-
-const LinkSchema = new Schema ({
-    hash: {
-        type:String,
-    },
-    isShare:{
-      type:Boolean,
-      default:false  
-    },
-    userId:{
-        type:mongoose.Schema.Types.ObjectId, ref: 'User',
-        required:true,
-        unique:true 
-    }
-})
-
-export const LinkModel = mongoose.model("Link" , LinkSchema)
+export const ContentModel = mongoose.model("Content" , ContentSchema);

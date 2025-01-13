@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import CloseIcon from "../icons/CloseIcon";
 import PlusIcon from "../icons/PlusIcon";
 import ShareIcon from "../icons/ShareIcon";
@@ -5,6 +6,7 @@ import TwitterIcon from "../icons/TwitterIcon";
 import YoutubeIcon from "../icons/YoutubeIcon";
 import Button from "./Button";
 import SidebarItems from "./SidebarItems";
+import axios from "axios";
 
 interface SidebarType {
   setMenuOpen: () => void;
@@ -12,8 +14,72 @@ interface SidebarType {
   menuOpen: boolean;
 }
 
-
 const Sidebar = (props: SidebarType) => {
+  let isPublicValue: boolean = false;
+  const [isPublic, setIsPublic] = useState(isPublicValue);
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  const shareBrain = () => {
+    setIsPublic(!isPublic);
+  };
+
+  interface responseType {
+    message: string;
+    userInfo?: {
+      isPublic?: boolean;
+    };
+  }
+
+  const getUserInfo = async () => {
+    const response = await axios.get<responseType>(
+      "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/getuserinfo",
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+
+    if (response.data.userInfo?.isPublic) {
+      isPublicValue = response.data.userInfo.isPublic;
+      setIsPublic(isPublicValue);
+    }
+
+    // console.log("isPublic: " + isPublic);
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const sendRequest = async () => {
+    const response = await axios.post<responseType>(
+      "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/brain/share",
+      {
+        share: isPublic,
+      },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+
+    // console.log("response: " + response.data?.message);
+  };
+
+  useEffect(() => {
+    if (hasMounted) {
+      sendRequest();
+      // console.log("request sent for share value: " + isPublic);
+    } else {
+      setHasMounted(true);
+    }
+  }, [isPublic]);
+
   return (
     <div
       className={`transition-all duration-500 ease-in-out ${
@@ -46,12 +112,18 @@ const Sidebar = (props: SidebarType) => {
           startIcon={<PlusIcon />}
           OnClickFn={props.setModal}
         />
-        <Button
+        {/* <Button
           variant="secondary"
           size="sm"
           text="Share Brain"
           startIcon={<ShareIcon />}
-        />
+        /> */}
+
+        <button
+          onClick={shareBrain}
+          className="bg-secondary text-primary hover:bg-purple-600 hover:outline outline-1 hover:text-white transition duration-300 ease-in-out py-2 px-3 text-sm rounded-lg w-fit flex items-center gap-2 ">
+          <ShareIcon /> {isPublic ? "Hide Brain" : "Share Brain"}
+        </button>
       </div>
     </div>
   );

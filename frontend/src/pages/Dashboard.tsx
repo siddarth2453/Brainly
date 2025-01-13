@@ -18,29 +18,24 @@ const Dashboard = () => {
 
   const deleteContent = async (id: string) => {
     try {
-      // Send DELETE request with contentId in the body (using 'data' field in axios)
       const response = await axios.delete(
         "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
         {
           //@ts-ignore
-          data: { contentId: id }, // The contentId to delete
+          data: { contentId: id },
           headers: {
-            Authorization: `${token}`, // Assuming token is needed for authorization
+            Authorization: `${token}`,
           },
         }
       );
 
-      fetchContents()
-      console.log("Content deleted:", response.data);
-      // You may want to update the state or UI after deletion
+      fetchContents();
     } catch (error) {
       console.error("Error deleting content:", error);
-      // Handle the error appropriately, e.g., show an alert
     }
   };
-  
- 
-   const fetchContents = async () => {
+
+  const fetchContents = async () => {
     const response = await axios.get<ContentResponse>(
       "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
       {
@@ -63,7 +58,6 @@ const Dashboard = () => {
         <Modal
           value={isOpen}
           onSubmitFn={fetchContents}
-
           onClickFn={() => {
             setIsOpen(false);
           }}
@@ -77,8 +71,7 @@ const Dashboard = () => {
             setMenuOpen(false);
           }}
         />
-        <div
-          className={`min-w-screen min-h-screen `}>
+        <div className={`min-w-screen min-h-screen `}>
           <div className="py-5 ">
             <DashNav
               menuOpen={menuOpen}
@@ -101,7 +94,7 @@ const Dashboard = () => {
                     title={content.title}
                     link={content.link}
                     type={content.type}
-                    deleteFn={()=> deleteContent(content._id) }
+                    deleteFn={() => deleteContent(content._id)}
                   />
                 ))}
               </div>

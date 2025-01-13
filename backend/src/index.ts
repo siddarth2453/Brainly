@@ -1,10 +1,9 @@
 import express from "express";
 import { connectDb } from "./utils/db";
-import { UserModel, ContentModel, LinkModel } from "./models/schema";
+import { UserModel, ContentModel } from "./models/schema";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { userMiddleware } from "./middlewares/userMiddleware";
-import randomHash from "./utils/randomHash";
 import cors from "cors";
 import { signupSchema, signinSchema } from "./utils/zodValidation";
 import { z } from "zod";
@@ -14,6 +13,7 @@ declare global {
   namespace Express {
     export interface Request {
       userId: string;
+      username: string;
     }
   }
 }
@@ -97,7 +97,7 @@ app.post("/api/v1/signin", async (req, res) => {
           throw new Error("JWT_SECRET is not defined");
         }
         const token = jwt.sign(
-          { id: existingUser._id },
+          { id: existingUser._id, username: existingUser.username },
           process.env.JWT_SECRET
         );
 
@@ -131,11 +131,7 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 });
 
-app.post(
-  "/api/v1/content",
-  userMiddleware,
-  contentMiddleware,
-  async (req, res) => {
+app.post("/api/v1/content",userMiddleware,contentMiddleware, async (req, res) => {
     try {
       const { link, type, title } = req.body;
 
@@ -154,6 +150,7 @@ app.post(
           type,
           title,
           userId: req.userId,
+          username: req.username,
         });
 
         res.status(200).json({
@@ -223,78 +220,85 @@ app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
     const { share } = req.body;
 
     if (share) {
-      const existingUser = await LinkModel.findOne({
-        userId: req.userId,
-      });
-
-      if (existingUser) {
-        res.status(409).json({
-          message: "Already Link Exists",
-          hash: existingUser.hash,
-          userId:existingUser.userId
-        });
-      } else {
-        const hash = randomHash(10);
-
-        await LinkModel.create({
-          hash,
-          userId: req.userId,
-          isShare:true
-        });
-
-        res.status(200).json({
-          message: "success creating sharable link",
-          hash,
-        });
-      }
-    } else {
-      const deletedLink = await LinkModel.deleteOne({
-        userId: req.userId,
-        isShare:false
-      });
-
-      if (deletedLink.deletedCount > 0) {
-        res.status(200).json({
-          message: "Deleted",
-        });
-      } else {
-        res.status(400).json({
-          message: "Wrong input",
-        });
-      }
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong!",
-    });
-  }
-});
-
-app.get("/api/v1/brain/:share", async (req, res) => {
-  const { share } = req.params;
-  try {
-    const LinkInfo = await LinkModel.findOne({
-      hash: share,
-    });
-
-    if (LinkInfo) {
-      const userContents = await ContentModel.find({
-        userId: LinkInfo.userId,
-      }).populate("userId", "username");
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        req.userId,
+        { isPublic: share },
+        { new: true }
+      );
 
       res.status(200).json({
-        message: "Contents of User",
-        userContents,
+        message: "set to public",
       });
     } else {
-      res.status(400).json({
-        message: "invalid link",
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        req.userId,
+        { isPublic: share },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: "set to private",
       });
     }
   } catch (error) {
-    res.send("error");
+    console.error(error);
+
+    res.status(400).json({
+      error,
+    });
   }
 });
+
+app.get("/api/v1/brain/:username", async (req, res) => {
+  const username = req.params;
+
+  try {
+    const userinfo = await UserModel.findOne(username);
+
+
+    if (userinfo) {
+      if (userinfo.isPublic === true) {
+        const contents = await ContentModel.find(username);
+
+        res.status(200).json({
+          contents,
+        });
+      } else {
+        res.status(200).json({
+          message: "User Brain is Private",
+        });
+      }
+    } else {
+      res.status(400).json({
+        message: "No users found",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      message: "Something went wrong | server error",
+    });
+  }
+});
+
+app.get("/api/v1/getuserinfo",userMiddleware, async(req ,res) => {
+
+  try {
+    const userInfo = await UserModel.findOne({ _id: req.userId }).select("username isPublic");
+
+    if (!userInfo) {
+       res.status(404).json({ message: "User not found" });
+       return
+    }
+
+    res.status(200).json({ 
+      message:"User Details Found",
+      userInfo });
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
 
 
 app.listen(3000, () => {

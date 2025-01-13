@@ -3,6 +3,15 @@ import { NextFunction, Request, Response } from "express";
 
 const JWT_SECRET = "TOPSECRET";
 
+declare global {
+  namespace Express {
+    export interface Request {
+      userId: string;
+      username: string;
+    }
+  }
+}
+
 export const userMiddleware = (
   req: Request,
   res: Response,
@@ -12,10 +21,13 @@ export const userMiddleware = (
     const token = req.headers["authorization"];
 
     if (token) {
-      const decodedId = jwt.verify(token as string, JWT_SECRET);
+      const decodedId = jwt.verify(
+        token as string,
+        JWT_SECRET
+      ) as jwt.JwtPayload;
 
-      //@ts-ignore
       req.userId = decodedId.id;
+      req.username = decodedId.username;
       next();
     } else {
       res.status(401).json({
