@@ -56,7 +56,7 @@ const Sidebar = (props: SidebarType) => {
   }, []);
 
   const sendRequest = async () => {
-    const response = await axios.post<responseType>(
+      await axios.post<responseType>(
       "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/brain/share",
       {
         share: isPublic,
