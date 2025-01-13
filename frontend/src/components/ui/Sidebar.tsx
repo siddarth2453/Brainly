@@ -17,6 +17,7 @@ interface SidebarType {
 
 const Sidebar = (props: SidebarType) => {
   let isPublicValue: boolean = false;
+  let [username, setUsername] = useState("");
   const [isPublic, setIsPublic] = useState(isPublicValue);
 
   const [hasMounted, setHasMounted] = useState(false);
@@ -31,25 +32,37 @@ const Sidebar = (props: SidebarType) => {
     message: string;
     userInfo?: {
       isPublic?: boolean;
+      username?: string;
     };
   }
 
   const getUserInfo = async () => {
-    const response = await axios.get<responseType>(
-      `${API_URL}/getuserinfo`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+    const response = await axios.get<responseType>(`${API_URL}/getuserinfo`, {
+      headers: {
+        Authorization: token,
+      },
+    });
 
     if (response.data.userInfo?.isPublic) {
       isPublicValue = response.data.userInfo.isPublic;
       setIsPublic(isPublicValue);
     }
 
-    // console.log("isPublic: " + isPublic);
+    if (response.data.userInfo?.username) {
+      setUsername(response.data.userInfo.username);
+    }
+    
+  };
+
+
+  const shareUrl = `https://brainlybybeast.vercel.app/brain/${username}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch(() => {
+      alert("Failed to copy the link.");
+    });
   };
 
   useEffect(() => {
@@ -57,7 +70,7 @@ const Sidebar = (props: SidebarType) => {
   }, []);
 
   const sendRequest = async () => {
-      await axios.post<responseType>(
+    await axios.post<responseType>(
       `${API_URL}/brain/share`,
       {
         share: isPublic,
@@ -80,6 +93,9 @@ const Sidebar = (props: SidebarType) => {
       setHasMounted(true);
     }
   }, [isPublic]);
+
+
+  
 
   return (
     <div
@@ -126,6 +142,18 @@ const Sidebar = (props: SidebarType) => {
           <ShareIcon /> {isPublic ? "Hide Brain" : "Share Brain"}
         </button>
       </div>
+      {isPublic && (
+        <div className="text-center text-sm text-primary bg-gray-200 py-2 px-1 flex items-center justify-center">
+          <span className="truncate">{shareUrl}</span>
+          <button
+            onClick={handleCopy}
+            className="ml-2 text-blue-500 hover:text-blue-700"
+            title="Copy Link"
+          >
+            📋 {/* Use an icon like this or replace with a proper icon library */}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
