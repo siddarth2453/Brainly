@@ -24,7 +24,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // Localhost frontend
-      "https://brainlybybeast.vercel.app", // Production frontend
+      "https://brainlybybeast.vercel.app",
+       "https://h3l0ss5j-5173.inc1.devtunnels.ms"  
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow credentials (cookies or JWT tokens)
