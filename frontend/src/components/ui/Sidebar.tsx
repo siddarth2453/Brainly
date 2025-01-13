@@ -7,6 +7,7 @@ import YoutubeIcon from "../icons/YoutubeIcon";
 import Button from "./Button";
 import SidebarItems from "./SidebarItems";
 import axios from "axios";
+import { API_URL } from "../../utils/config";
 
 interface SidebarType {
   setMenuOpen: () => void;
@@ -35,7 +36,7 @@ const Sidebar = (props: SidebarType) => {
 
   const getUserInfo = async () => {
     const response = await axios.get<responseType>(
-      "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/getuserinfo",
+      `${API_URL}/getuserinfo`,
       {
         headers: {
           Authorization: token,
@@ -57,7 +58,7 @@ const Sidebar = (props: SidebarType) => {
 
   const sendRequest = async () => {
       await axios.post<responseType>(
-      "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/brain/share",
+      `${API_URL}/brain/share`,
       {
         share: isPublic,
       },

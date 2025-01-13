@@ -3,6 +3,7 @@ import Button from "../components/ui/Button";
 import Navbar from "../components/ui/Navbar";
 import { useRef, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../utils/config";
 
 const SignUp = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -24,7 +25,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post<{ message: string }>(
-        `https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/signup`,
+        `${API_URL}/signup`,
         {
           username,
           email,

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/ui/Sidebar";
 import DashNav from "../components/ui/DashNav";
 import axios from "axios";
+import {API_URL} from "../utils/config";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ const Dashboard = () => {
   const deleteContent = async (id: string) => {
     try {
        await axios.delete(
-        "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
+        `${API_URL}/content`,
         {
           //@ts-ignore
           data: { contentId: id },
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
   const fetchContents = async () => {
     const response = await axios.get<ContentResponse>(
-      "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
+      `${API_URL}/content`,
       {
         headers: {
           Authorization: token,

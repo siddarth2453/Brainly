@@ -4,6 +4,7 @@ import InputBox from "../components/ui/InputBox";
 import Navbar from "../components/ui/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { API_URL } from "../utils/config";
 
 const SignIn = () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -17,7 +18,7 @@ const SignIn = () => {
 
     try {
       const response: any = await axios.post(
-        "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/signin",
+        `${API_URL}/signin`,
         {
           email,
           password,

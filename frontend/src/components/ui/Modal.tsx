@@ -3,6 +3,7 @@ import InputBox from "./InputBox";
 import Button from "./Button";
 import { useRef, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../../utils/config";
 
 interface ModalProps {
   value: boolean;
@@ -27,7 +28,7 @@ const Modal = (props: ModalProps) => {
 
     try {
       const response = await axios.post<ResponseData>(
-        "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
+        `${API_URL}/content`,
         {
           title,
           link,

@@ -1,0 +1,1 @@
+export const API_URL = "https://brainly-backend-0etz.onrender.com/api/v1";
