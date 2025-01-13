@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const deleteContent = async (id: string) => {
     try {
-      const response = await axios.delete(
+       await axios.delete(
         "https://h3l0ss5j-3000.inc1.devtunnels.ms/api/v1/content",
         {
           //@ts-ignore
