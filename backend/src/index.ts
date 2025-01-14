@@ -161,8 +161,9 @@ app.post("/api/v1/content",userMiddleware,contentMiddleware, async (req, res) =>
     } catch (error) {
       res.status(500).json({
         message: "something went wrong",
+        error
       });
-      console.error(error);
+      console.log(error);
     }
   }
 );
