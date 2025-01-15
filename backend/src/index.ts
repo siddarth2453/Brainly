@@ -34,6 +34,13 @@ app.use(
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to Brainly API | Backend Server is up and running.",
+  })
+})
+
 app.post("/api/v1/signup", async (req, res) => {
   try {
     // Validate the request body using Zod
