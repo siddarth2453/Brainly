@@ -7,7 +7,7 @@ interface CardProps {
   title: string;
   link: string;
   type: "youtube" | "tweet";
-  deleteFn:() =>void
+  deleteFn?:() =>void
 }
 
 
@@ -26,7 +26,7 @@ const Card = (props: CardProps) => {
             <ShareIcon />
           </div> */}
           <div className="cursor-pointer hover:text-red-500 transition-all duration-200" onClick={props.deleteFn}>
-            <DeleteIcon />
+            {props.deleteFn && <DeleteIcon />}
           </div>
         </div>
       </div>

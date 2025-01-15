@@ -18,7 +18,7 @@ const Dashboard = () => {
     contents: any[];
   }
 
-  const deleteContent = async (id: string) => {
+ const deleteContent = async (id: string) => {
     try {
        await axios.delete(
         `${API_URL}/content`,

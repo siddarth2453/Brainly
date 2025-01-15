@@ -1,1 +1,1 @@
-export const API_URL = "https://brainly-backend-0etz.onrender.com/api/v1";
+export const API_URL = "https://brainlybybeast.vercel.app/api/v1";

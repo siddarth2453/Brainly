@@ -25,7 +25,12 @@ const Sidebar = (props: SidebarType) => {
   const token = localStorage.getItem("token");
 
   const shareBrain = () => {
-    setIsPublic(!isPublic);
+    if(token){
+      setIsPublic(!isPublic);
+    }
+    else{
+      alert("Please login to share your brain.");
+    }
   };
 
   interface responseType {
@@ -72,19 +77,23 @@ const Sidebar = (props: SidebarType) => {
   }, []);
 
   const sendRequest = async () => {
-    await axios.post<responseType>(
-      `${API_URL}/brain/share`,
-      {
-        share: isPublic,
-      },
-      {
-        headers: {
-          Authorization: token,
+    if(token){
+      await axios.post<responseType>(
+        `${API_URL}/brain/share`,
+        {
+          share: isPublic,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
-    // console.log("response: " + response.data?.message);
+      // console.log("response: " + response.data?.message);
+    }
+
+    
   };
 
   useEffect(() => {
