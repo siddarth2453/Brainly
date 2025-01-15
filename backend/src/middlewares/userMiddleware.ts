@@ -1,7 +1,6 @@
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 
-const JWT_SECRET = "TOPSECRET";
 
 declare global {
   namespace Express {
@@ -23,7 +22,7 @@ export const userMiddleware = (
     if (token) {
       const decodedId = jwt.verify(
         token as string,
-        JWT_SECRET
+        process.env.JWT_SECRET as Secret
       ) as jwt.JwtPayload;
 
       req.userId = decodedId.id;
@@ -37,6 +36,7 @@ export const userMiddleware = (
   } catch (error) {
     res.status(500).json({
       message: "Something went Wrong",
+      error
     });
   }
 };

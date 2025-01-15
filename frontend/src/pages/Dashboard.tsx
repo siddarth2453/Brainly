@@ -38,16 +38,18 @@ const Dashboard = () => {
   };
 
   const fetchContents = async () => {
-    const response = await axios.get<ContentResponse>(
-      `${API_URL}/content`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-    const data = response.data.contents;
-    setContents(data);
+    if(token) {
+      const response = await axios.get<ContentResponse>(
+        `${API_URL}/content`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      const data = response.data.contents;
+      setContents(data);
+    }
   };
 
   useEffect(() => {

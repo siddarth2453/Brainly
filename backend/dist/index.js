@@ -153,8 +153,9 @@ app.post("/api/v1/content", userMiddleware_1.userMiddleware, contentMiddleware_1
     catch (error) {
         res.status(500).json({
             message: "something went wrong",
+            error
         });
-        console.error(error);
+        console.log(error);
     }
 }));
 app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

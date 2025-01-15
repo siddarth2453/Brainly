@@ -66,7 +66,9 @@ const Sidebar = (props: SidebarType) => {
   };
 
   useEffect(() => {
-    getUserInfo();
+    if(token) {
+      getUserInfo();
+    }
   }, []);
 
   const sendRequest = async () => {
