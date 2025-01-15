@@ -25,7 +25,7 @@ app.use(
     origin: [
       "http://localhost:5173", // Localhost frontend
       "https://brainlybybeast.vercel.app",
-       "https://h3l0ss5j-5173.inc1.devtunnels.ms"  
+      "https://h3l0ss5j-5173.inc1.devtunnels.ms",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow credentials (cookies or JWT tokens)
@@ -38,8 +38,18 @@ app.get("/", (req, res) => {
   res.status(200).json({
     status: "success",
     message: "Welcome to Brainly API | Backend Server is up and running.",
-  })
-})
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Server is healthy and running on Render!",
+    uptime: process.uptime(), // Time the server has been running in seconds
+    timestamp: new Date().toISOString(), // Current server time
+  });
+});
+
 
 app.post("/api/v1/signup", async (req, res) => {
   try {
@@ -139,7 +149,11 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 });
 
-app.post("/api/v1/content",userMiddleware,contentMiddleware, async (req, res) => {
+app.post(
+  "/api/v1/content",
+  userMiddleware,
+  contentMiddleware,
+  async (req, res) => {
     try {
       const { link, type, title } = req.body;
 
@@ -168,7 +182,7 @@ app.post("/api/v1/content",userMiddleware,contentMiddleware, async (req, res) =>
     } catch (error) {
       res.status(500).json({
         message: "something went wrong",
-        error
+        error,
       });
       console.log(error);
     }
@@ -264,7 +278,6 @@ app.get("/api/v1/brain/:username", async (req, res) => {
   try {
     const userinfo = await UserModel.findOne(username);
 
-
     if (userinfo) {
       if (userinfo.isPublic === true) {
         const contents = await ContentModel.find(username);
@@ -289,26 +302,26 @@ app.get("/api/v1/brain/:username", async (req, res) => {
   }
 });
 
-app.get("/api/v1/getuserinfo",userMiddleware, async(req ,res) => {
-
+app.get("/api/v1/getuserinfo", userMiddleware, async (req, res) => {
   try {
-    const userInfo = await UserModel.findOne({ _id: req.userId }).select("username isPublic");
+    const userInfo = await UserModel.findOne({ _id: req.userId }).select(
+      "username isPublic"
+    );
 
     if (!userInfo) {
-       res.status(404).json({ message: "User not found" });
-       return
+      res.status(404).json({ message: "User not found" });
+      return;
     }
 
-    res.status(200).json({ 
-      message:"User Details Found",
-      userInfo });
+    res.status(200).json({
+      message: "User Details Found",
+      userInfo,
+    });
   } catch (error) {
     console.error("Error fetching user info:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-})
-
-
+});
 
 app.listen(3000, () => {
   console.log("server running succesfull");

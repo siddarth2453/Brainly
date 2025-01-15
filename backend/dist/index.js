@@ -27,12 +27,26 @@ app.use((0, cors_1.default)({
     origin: [
         "http://localhost:5173", // Localhost frontend
         "https://brainlybybeast.vercel.app",
-        "https://h3l0ss5j-5173.inc1.devtunnels.ms"
+        "https://h3l0ss5j-5173.inc1.devtunnels.ms",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow credentials (cookies or JWT tokens)
 }));
 app.use(express_1.default.json());
+app.get("/", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        message: "Welcome to Brainly API | Backend Server is up and running.",
+    });
+});
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        message: "Server is healthy and running on Render!",
+        uptime: process.uptime(), // Time the server has been running in seconds
+        timestamp: new Date().toISOString(), // Current server time
+    });
+});
 app.post("/api/v1/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Validate the request body using Zod
@@ -153,7 +167,7 @@ app.post("/api/v1/content", userMiddleware_1.userMiddleware, contentMiddleware_1
     catch (error) {
         res.status(500).json({
             message: "something went wrong",
-            error
+            error,
         });
         console.log(error);
     }
@@ -266,7 +280,7 @@ app.get("/api/v1/getuserinfo", userMiddleware_1.userMiddleware, (req, res) => __
         }
         res.status(200).json({
             message: "User Details Found",
-            userInfo
+            userInfo,
         });
     }
     catch (error) {
