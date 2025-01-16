@@ -8,7 +8,7 @@ interface FilterType {
 const FilterContext = createContext<FilterType | undefined>(undefined);
 
 export const FilterProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-    const [filter, setFilter] = useState<string>("all"); // Default filter
+    const [filter, setFilter] = useState<string>("all"); 
   
     return (
       <FilterContext.Provider value={{ filter, setFilter }}>

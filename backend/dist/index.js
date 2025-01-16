@@ -176,8 +176,6 @@ app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awai
     try {
         const { userId } = req;
         const { filter } = req.query;
-        console.log(filter);
-        console.log(userId);
         const contents = yield schema_1.ContentModel.find({
             userId,
         }).populate("userId", "username");

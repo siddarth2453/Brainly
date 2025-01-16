@@ -216,6 +216,7 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
     } else {
       res.status(400).json({
         message: "No content created by the user | Wrong filter",
+        filter
       });
     }}
   } catch (error) {
