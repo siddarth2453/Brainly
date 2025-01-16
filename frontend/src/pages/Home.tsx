@@ -51,6 +51,7 @@ const Home = () => {
                 into actionable insights. Future-ready with powerful search and
                 AI-driven embeddings to explore your knowledge like never before.
               </p>
+              <div className="w-full flex justify-center md:justify-start">
               <NavLink to="/dashboard">
                 <Button 
                   variant="primary" 
@@ -59,6 +60,7 @@ const Home = () => {
                   extraClasses="text-lg px-8 py-3 rounded-full transition-transform duration-300 transform hover:scale-105"
                 />
               </NavLink>
+              </div>
             </div>
           </div>
         </section>
