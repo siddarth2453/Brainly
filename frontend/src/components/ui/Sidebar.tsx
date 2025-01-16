@@ -122,7 +122,7 @@ const Sidebar = (props: SidebarType) => {
         props.menuOpen
           ? "transform translate-x-0 opacity-100"
           : "transform -translate-x-full opacity-0"
-      } w-80 h-screen bg-white px-6 py-4 fixed top-0 left-0 border-3 border-r rounded-lg`}>
+      } w-80 h-screen bg-white px-6 py-4 fixed top-0 left-0 border-3 border-r rounded-lg `}>
       <div className="flex justify-between">
         <div className="flex gap-2 justify-start items-center mb-6">
           <img className="w-[2rem]" src="/images/logo.png" alt="logo" />
@@ -146,6 +146,7 @@ const Sidebar = (props: SidebarType) => {
           size="sm"
           text="Add New"
           startIcon={<PlusIcon />}
+          extraClasses=" max-sm:text-xs "
           OnClickFn={props.setModal}
         />
         {/* <Button
@@ -166,7 +167,7 @@ const Sidebar = (props: SidebarType) => {
           <span className="truncate">{shareUrl}</span>
           <button
             onClick={handleCopy}
-            className="ml-2 text-blue-500 hover:text-blue-700"
+            className="ml-2 text-blue-500 hover:text-blue-700 max-sm:text-xs"
             title="Copy Link"
           >
             📋 {/* Use an icon like this or replace with a proper icon library */}
