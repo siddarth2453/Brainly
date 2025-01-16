@@ -3,6 +3,7 @@ import Button from "../components/ui/Button";
 import Navbar from "../components/ui/Navbar";
 import { useRef, useState } from "react";
 import axios from "axios";
+import { NavLink } from "react-router";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const SignUp = () => {
@@ -54,51 +55,84 @@ const SignUp = () => {
   };
 
   return (
-    <div className="pt-5 bg-secondary">
-      <Navbar />
-      <div className="flex justify-center items-center min-w-screen min-h-screen p-4">
-        <div className="w-[36rem] h-[36rem] flex flex-col gap-4 items-center justify-center rounded-lg bg-slate-300 bg-opacity-50 shadow">
-          {/* Show Loading Spinner */}
-          {loading && <p className="text-blue-500">Loading...</p>}
+    <div className="min-h-screen bg-secondary flex flex-col">
+      <div className="py-5 flex-shrink-0">
+        <Navbar />
+      </div>
 
-          {/* Show Success or Error Message */}
-          {message && <p className="text-center text-green-500">{message}</p>}
+      <div className="flex-grow flex justify-center items-center p-4">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden max-h-[calc(100vh-10rem)]">
+          <div className="p-8 overflow-y-auto">
+            <h2 className="text-2xl font-bold text-center mb-6 text-primary">
+              Sign Up
+            </h2>
 
-          {/* Show Validation Errors */}
-          {errors.length > 0 && (
-            <div className="text-red-500 text-center">
-              <ul>
-                {errors.map((error, index) => (
-                  <li key={index}>{error}</li>
-                ))}
-              </ul>
+            {/* Show Loading Spinner */}
+            {loading && (
+              <p className="text-blue-500 text-center mb-4">Loading...</p>
+            )}
+
+            {/* Show Success or Error Message */}
+            {message && (
+              <p className="text-center text-green-500 mb-4 p-2 bg-green-100 rounded">
+                {message}
+              </p>
+            )}
+
+            {/* Show Validation Errors */}
+            {errors.length > 0 && (
+              <div className="text-red-500 text-center mb-4 p-2 bg-red-100 rounded">
+                <ul>
+                  {errors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <InputBox
+                reference={usernameRef}
+                placeholder="username"
+                type="text"
+                required={true}
+                extraClasses="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <InputBox
+                reference={emailRef}
+                placeholder="email"
+                type="email"
+                required={true}
+                extraClasses="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <InputBox
+                reference={passwordRef}
+                placeholder="password"
+                type="password"
+                required={true}
+                extraClasses="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <div className="flex items-center justify-center">
+                <Button
+                  text="Sign Up"
+                  size="sm"
+                  variant="primary"
+                  OnClickFn={OnButtonClick}
+                  extraClasses=" py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                />
+              </div>
             </div>
-          )}
-
-          <InputBox
-            reference={usernameRef}
-            placeholder="username"
-            type="text"
-            required={true}
-          />
-          <InputBox
-            reference={emailRef}
-            placeholder="email"
-            type="email"
-            required={true}
-          />
-          <InputBox
-            reference={passwordRef}
-            placeholder="password"
-            type="password"
-            required={true}
-          />
-          <Button
-            text="Sign Up"
-            size="md"
-            variant="primary"
-            OnClickFn={OnButtonClick}
-          />
+          </div>
+          <div className="px-8 py-4 bg-gray-50 border-t border-gray-200 text-center">
+            <p className="text-sm text-gray-600">
+              Already have an account?
+              <NavLink
+                to="/signin"
+                className="font-medium text-primary hover:underline">
+                 Sign In
+              </NavLink>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -106,3 +140,4 @@ const SignUp = () => {
 };
 
 export default SignUp;
+

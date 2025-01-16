@@ -118,11 +118,11 @@ const Sidebar = (props: SidebarType) => {
 
   return (
     <div
-      className={`transition-all duration-500 ease-in-out ${
+      className={`transition-all duration-500 ease-in-out  ${
         props.menuOpen
           ? "transform translate-x-0 opacity-100"
           : "transform -translate-x-full opacity-0"
-      } w-80 h-screen bg-white px-6 py-4 fixed top-0 left-0 border-3 border-r rounded-lg `}>
+      } w-80 md:w-96 h-screen bg-white px-6 py-4 fixed top-0 left-0 border-3 border-r rounded-lg `}>
       <div className="flex justify-between">
         <div className="flex gap-2 justify-start items-center mb-6">
           <img className="w-[2rem]" src="/images/logo.png" alt="logo" />

@@ -3,7 +3,7 @@ import Button from "../components/ui/Button";
 import InputBox from "../components/ui/InputBox";
 import Navbar from "../components/ui/Navbar";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const SignIn = () => {
@@ -22,7 +22,8 @@ const SignIn = () => {
         {
           email,
           password,
-        }, { withCredentials: true }
+        },
+        { withCredentials: true }
       );
 
       if (response.data.token) {
@@ -41,38 +42,62 @@ const SignIn = () => {
   };
 
   return (
-    <>
-      <div className="pt-5 bg-secondary">
+    <div className="min-h-screen bg-secondary flex flex-col">
+      <div className="py-5 flex-shrink-0">
         <Navbar />
-        <div className="flex justify-center items-center min-w-screen min-h-screen p-4">
-          <div className="w-[36rem] h-[36rem] flex flex-col gap-4 items-center justify-center rounded-lg bg-slate-300 bg-opacity-50 shadow">
+      </div>
+      <div className="flex-grow flex justify-center items-center p-4">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Sign In</h2>
             {error && (
-              <div className="text-red-500 mt-2 text-sm">{error}</div> // Display error message
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span className="block sm:inline">{error}</span>
+              </div>
             )}
-            <InputBox
-              placeholder="email"
-              reference={emailRef}
-              type="text"
-              required={true}
-            />
-            <InputBox
-              placeholder="password"
-              reference={passwordRef}
-              type="password"
-              required={true}
-            />
-
-            <Button
-              text="Sign In"
-              size="md"
-              variant="primary"
-              OnClickFn={OnButtonClick}
-            />
+            <div className="space-y-6">
+              <div>
+                <InputBox
+                  placeholder="Email"
+                  reference={emailRef}
+                  type="text"
+                  required={true}
+                  extraClasses="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <div>
+                <InputBox
+                  placeholder="Password"
+                  reference={passwordRef}
+                  type="password"
+                  required={true}
+                  extraClasses="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Button
+                  text="Sign In"
+                  size="sm"
+                  variant="primary"
+                  OnClickFn={OnButtonClick}
+                  extraClasses=" py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="px-8 py-4 bg-gray-50 border-t border-gray-200 text-center">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <NavLink to="/signup" className="font-medium text-primary hover:underline">
+                Sign up
+              </NavLink>
+            </p>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export default SignIn;
+
