@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/ui/Sidebar";
 import DashNav from "../components/ui/DashNav";
 import axios from "axios";
-import {API_URL} from "../utils/config";
-
+import { API_URL } from "../utils/config";
+import { useFilter } from "../contexts/FilterContext";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [contents, setContents] = useState<any[]>([]);
+  
+  const { filter } = useFilter();
+
 
   const token = localStorage.getItem("token");
 
@@ -18,18 +21,18 @@ const Dashboard = () => {
     contents: any[];
   }
 
- const deleteContent = async (id: string) => {
+  const deleteContent = async (id: string) => {
     try {
-       await axios.delete(
-        `${API_URL}/content`,
-        {
-          //@ts-ignore
-          data: { contentId: id },
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      await axios.delete(`${API_URL}/content`, {
+        //@ts-ignore
+        data: { contentId: id },
+        headers: {
+          Authorization: `${token}`,
+        },
+        params: {
+          filter,
+        },
+      });
 
       fetchContents();
     } catch (error) {
@@ -38,15 +41,15 @@ const Dashboard = () => {
   };
 
   const fetchContents = async () => {
-    if(token) {
-      const response = await axios.get<ContentResponse>(
-        `${API_URL}/content`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+    if (token) {
+      const response = await axios.get<ContentResponse>(`${API_URL}/content`, {
+        headers: {
+          Authorization: token,
+        },
+        params: {
+          filter,
+        },
+      });
       const data = response.data.contents;
       setContents(data);
     }
@@ -55,6 +58,10 @@ const Dashboard = () => {
   useEffect(() => {
     fetchContents();
   }, []);
+
+  useEffect(() => {
+    fetchContents();
+  }, [filter]);
 
   return (
     <>
@@ -94,7 +101,7 @@ const Dashboard = () => {
               <div className="w-full h-full text-primary flex flex-wrap items-start justify-center p-3 gap-4">
                 {contents.map((content, index) => (
                   <Card
-                    key={index}
+                    key={content._id}
                     title={content.title}
                     link={content.link}
                     type={content.type}

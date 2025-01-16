@@ -174,19 +174,36 @@ app.post("/api/v1/content", userMiddleware_1.userMiddleware, contentMiddleware_1
 }));
 app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = req.userId;
+        const { userId } = req;
+        const { filter } = req.query;
+        console.log(filter);
+        console.log(userId);
         const contents = yield schema_1.ContentModel.find({
             userId,
         }).populate("userId", "username");
         if (contents) {
-            res.status(200).json({
-                contents,
-            });
-        }
-        else {
-            res.status(400).json({
-                message: "No content created by the user",
-            });
+            if (filter == "all") {
+                res.status(200).json({
+                    contents,
+                });
+            }
+            else if (filter == "youtube") {
+                const youtubeContents = contents.filter((content) => content.type === "youtube");
+                res.status(200).json({
+                    contents: youtubeContents,
+                });
+            }
+            else if (filter == "tweet") {
+                const tweetContents = contents.filter((content) => content.type === "tweet");
+                res.status(200).json({
+                    contents: tweetContents,
+                });
+            }
+            else {
+                res.status(400).json({
+                    message: "No content created by the user | Wrong filter",
+                });
+            }
         }
     }
     catch (error) {
@@ -243,30 +260,35 @@ app.post("/api/v1/brain/share", userMiddleware_1.userMiddleware, (req, res) => _
     }
 }));
 app.get("/api/v1/brain/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = req.params;
+    const { username } = req.params;
     try {
-        const userinfo = yield schema_1.UserModel.findOne(username);
+        const userinfo = yield schema_1.UserModel.findOne({ username });
         if (userinfo) {
             if (userinfo.isPublic === true) {
-                const contents = yield schema_1.ContentModel.find(username);
+                const contents = yield schema_1.ContentModel.find({ username });
                 res.status(200).json({
                     contents,
+                    message: "Contents fetched successfully",
                 });
             }
             else {
                 res.status(200).json({
+                    contents: [],
                     message: "User Brain is Private",
                 });
             }
         }
         else {
             res.status(400).json({
+                contents: [],
                 message: "No users found",
             });
         }
     }
     catch (error) {
-        res.status(400).json({
+        console.error(error);
+        res.status(500).json({
+            contents: [],
             message: "Something went wrong | server error",
         });
     }

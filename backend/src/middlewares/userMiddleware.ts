@@ -1,7 +1,6 @@
 import jwt, { Secret } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 
-
 declare global {
   namespace Express {
     export interface Request {

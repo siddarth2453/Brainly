@@ -50,7 +50,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-
 app.post("/api/v1/signup", async (req, res) => {
   try {
     // Validate the request body using Zod
@@ -191,21 +190,34 @@ app.post(
 
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
   try {
-    const userId = req.userId;
+    const {userId} = req;
+    const { filter } = req.query;
 
     const contents = await ContentModel.find({
       userId,
     }).populate("userId", "username");
 
     if (contents) {
-      res.status(200).json({
-        contents,
-      });
+
+      if(filter == "all") {
+        res.status(200).json({
+          contents,
+        });
+      } else if(filter == "youtube"){
+        const youtubeContents = contents.filter((content) => content.type === "youtube");
+        res.status(200).json({
+          contents: youtubeContents,
+        });
+      }else if(filter == "tweet"){
+        const tweetContents = contents.filter((content) => content.type === "tweet");
+        res.status(200).json({
+          contents: tweetContents,
+        });
     } else {
       res.status(400).json({
-        message: "No content created by the user",
+        message: "No content created by the user | Wrong filter",
       });
-    }
+    }}
   } catch (error) {
     res.status(500).json({
       error,
@@ -273,34 +285,40 @@ app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
 });
 
 app.get("/api/v1/brain/:username", async (req, res) => {
-  const username = req.params;
+  const { username } = req.params;
 
   try {
-    const userinfo = await UserModel.findOne(username);
+    const userinfo = await UserModel.findOne({ username });
 
     if (userinfo) {
       if (userinfo.isPublic === true) {
-        const contents = await ContentModel.find(username);
+        const contents = await ContentModel.find({ username });
 
         res.status(200).json({
           contents,
+          message: "Contents fetched successfully",
         });
       } else {
         res.status(200).json({
+          contents: [],
           message: "User Brain is Private",
         });
       }
     } else {
       res.status(400).json({
+        contents: [],
         message: "No users found",
       });
     }
   } catch (error) {
-    res.status(400).json({
+    console.error(error);
+    res.status(500).json({
+      contents: [],
       message: "Something went wrong | server error",
     });
   }
 });
+
 
 app.get("/api/v1/getuserinfo", userMiddleware, async (req, res) => {
   try {

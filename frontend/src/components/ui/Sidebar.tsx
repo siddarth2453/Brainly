@@ -8,6 +8,7 @@ import Button from "./Button";
 import SidebarItems from "./SidebarItems";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
+import { useFilter } from "../../contexts/FilterContext";
 
 interface SidebarType {
   setMenuOpen: () => void;
@@ -16,6 +17,7 @@ interface SidebarType {
 }
 
 const Sidebar = (props: SidebarType) => {
+  const { setFilter } = useFilter(); 
   let isPublicValue: boolean = false;
   let [username, setUsername] = useState("");
   const [isPublic, setIsPublic] = useState(isPublicValue);
@@ -23,6 +25,12 @@ const Sidebar = (props: SidebarType) => {
   const [hasMounted, setHasMounted] = useState(false);
 
   const token = localStorage.getItem("token");
+
+  const handleSidebarItemClick = (filter: string) => {
+    setFilter(filter); // Update filter in context
+  };
+
+
 
   const shareBrain = () => {
     if(token){
@@ -129,8 +137,8 @@ const Sidebar = (props: SidebarType) => {
         </div>
       </div>
 
-      <SidebarItems startIcon={<TwitterIcon />} text="Tweets" />
-      <SidebarItems startIcon={<YoutubeIcon />} text="Youtube" />
+      <SidebarItems startIcon={<TwitterIcon />} text="Tweets" onClickFn={()=>{handleSidebarItemClick("tweet")}}/>
+      <SidebarItems startIcon={<YoutubeIcon />} text="Youtube" onClickFn={() => handleSidebarItemClick("youtube")}/>
 
       <div className="py-2 flex gap-9 justify-center">
         <Button
