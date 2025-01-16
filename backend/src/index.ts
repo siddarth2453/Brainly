@@ -297,18 +297,18 @@ app.get("/api/v1/brain/:username", async (req, res) => {
 
         res.status(200).json({
           contents,
-          message: "Contents fetched successfully",
+          message: "Contents fetched successfully 🎉",
         });
       } else {
         res.status(200).json({
           contents: [],
-          message: "User Brain is Private",
+          message: "User Brain is Private 🤐",
         });
       }
     } else {
-      res.status(400).json({
+      res.status(204).json({
         contents: [],
-        message: "No users found",
+        message: "No users found with this username 💀",
       });
     }
   } catch (error) {

@@ -225,7 +225,7 @@ app.delete("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __a
         }
         else {
             res.status(400).json({
-                message: "Np Content Found!",
+                message: "No Content Found!",
             });
         }
     }
@@ -267,20 +267,20 @@ app.get("/api/v1/brain/:username", (req, res) => __awaiter(void 0, void 0, void 
                 const contents = yield schema_1.ContentModel.find({ username });
                 res.status(200).json({
                     contents,
-                    message: "Contents fetched successfully",
+                    message: "Contents fetched successfully 🎉",
                 });
             }
             else {
                 res.status(200).json({
                     contents: [],
-                    message: "User Brain is Private",
+                    message: "User Brain is Private 🤐",
                 });
             }
         }
         else {
-            res.status(400).json({
+            res.status(204).json({
                 contents: [],
-                message: "No users found",
+                message: "No users found with this username 💀",
             });
         }
     }

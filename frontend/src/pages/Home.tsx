@@ -1,6 +1,10 @@
 import { NavLink } from "react-router";
 import Navbar from "../components/ui/Navbar";
 import Button from "../components/ui/Button";
+import StorageIcon from "../components/icons/StorageIcon";
+import CollabIcon from "../components/icons/CollabIcon";
+import MultimediaIcon from '../components/icons/MultimediaIcon';
+
 
 const Home = () => {
   const features = [
@@ -8,24 +12,22 @@ const Home = () => {
       title: "Centralized Storage",
       description:
         "Save content from various sources like Twitter, YouTube, and Google Docs in one place.",
-      icon: "📦",
+      icon: <StorageIcon/>,
     },
     {
-      title: "AI-Powered Search",
-      description:
-        "Find anything you’ve saved with lightning-fast, AI-enhanced search capabilities.",
-      icon: "🔍",
+      title: "Seamless Collaboration",
+      description: "Share and collaborate on content effortlessly with teammates or friends in real-time.",
+      icon: <CollabIcon/>,
     },
     {
-      title: "Future-Ready Insights",
-      description:
-        "Leverage embeddings and smart tools to turn your data into actionable insights.",
-      icon: "🚀",
+      title: "Multi-Media Support",
+      description: "Save, view, and interact with youtube videos, tweets and more",
+      icon: <MultimediaIcon/>,
     },
   ];
 
   return (
-    <div className="bg-secondary min-w-screen min-h-screen pt-5 ">
+    <div className="bg-secondary min-w-screen min-h-screen pt-5 f">
       <Navbar />
       <div className="w-full flex flex-col md:flex-row justify-center  items-center  h-full ">
         <img
