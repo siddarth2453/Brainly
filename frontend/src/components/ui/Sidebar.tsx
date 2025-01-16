@@ -7,8 +7,8 @@ import YoutubeIcon from "../icons/YoutubeIcon";
 import Button from "./Button";
 import SidebarItems from "./SidebarItems";
 import axios from "axios";
-import { API_URL } from "../../utils/config";
 import { useFilter } from "../../contexts/FilterContext";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 interface SidebarType {
   setMenuOpen: () => void;
@@ -50,7 +50,7 @@ const Sidebar = (props: SidebarType) => {
   }
 
   const getUserInfo = async () => {
-    const response = await axios.get<responseType>(`${API_URL}/getuserinfo`, {
+    const response = await axios.get<responseType>(`${apiUrl }/getuserinfo`, {
       headers: {
         Authorization: token,
       },
@@ -87,7 +87,7 @@ const Sidebar = (props: SidebarType) => {
   const sendRequest = async () => {
     if(token){
       await axios.post<responseType>(
-        `${API_URL}/brain/share`,
+        `${apiUrl}/brain/share`,
         {
           share: isPublic,
         },

@@ -200,6 +200,7 @@ app.get("/api/v1/content", userMiddleware_1.userMiddleware, (req, res) => __awai
             else {
                 res.status(400).json({
                     message: "No content created by the user | Wrong filter",
+                    filter
                 });
             }
         }

@@ -1,9 +1,9 @@
 import { useParams } from "react-router";
 import Navbar from "../components/ui/Navbar";
-import { API_URL } from "../utils/config";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../components/ui/Card";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 interface ShareContent {
   _id: string;
@@ -21,7 +21,7 @@ const Share = () => {
 
 
   const share = async () => {
-    const response = await axios.get<{contents: ShareContent[]}>(`${API_URL}/brain/${username}`);
+    const response = await axios.get<{contents: ShareContent[]}>(`${apiUrl}/brain/${username}`);
      setContents(response.data?.contents)
   }
 

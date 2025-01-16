@@ -3,7 +3,7 @@ import InputBox from "./InputBox";
 import Button from "./Button";
 import { useRef, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../../utils/config";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 interface ModalProps {
   value: boolean;
@@ -28,7 +28,7 @@ const Modal = (props: ModalProps) => {
 
     try {
       const response = await axios.post<ResponseData>(
-        `${API_URL}/content`,
+        `${apiUrl }/content`,
         {
           title,
           link,

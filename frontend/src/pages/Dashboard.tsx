@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/ui/Sidebar";
 import DashNav from "../components/ui/DashNav";
 import axios from "axios";
-import { API_URL } from "../utils/config";
 import { useFilter } from "../contexts/FilterContext";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,14 +23,11 @@ const Dashboard = () => {
 
   const deleteContent = async (id: string) => {
     try {
-      await axios.delete(`${API_URL}/content`, {
+      await axios.delete(`${apiUrl}/content`, {
         //@ts-ignore
         data: { contentId: id },
         headers: {
           Authorization: `${token}`,
-        },
-        params: {
-          filter,
         },
       });
 
@@ -42,7 +39,7 @@ const Dashboard = () => {
 
   const fetchContents = async () => {
     if (token) {
-      const response = await axios.get<ContentResponse>(`${API_URL}/content`, {
+      const response = await axios.get<ContentResponse>(`${apiUrl}/content`, {
         headers: {
           Authorization: token,
         },
@@ -52,6 +49,8 @@ const Dashboard = () => {
       });
       const data = response.data.contents;
       setContents(data);
+      console.log(apiUrl);
+      
     }
   };
 
@@ -99,7 +98,7 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="w-full h-full text-primary flex flex-wrap items-start justify-center p-3 gap-4">
-                {contents.map((content, index) => (
+                {contents.map((content) => (
                   <Card
                     key={content._id}
                     title={content.title}

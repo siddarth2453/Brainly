@@ -3,7 +3,7 @@ import Button from "../components/ui/Button";
 import Navbar from "../components/ui/Navbar";
 import { useRef, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../utils/config";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const SignUp = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -25,7 +25,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post<{ message: string }>(
-        `${API_URL}/signup`,
+        `${apiUrl}/signup`,
         {
           username,
           email,
