@@ -241,7 +241,7 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
       });
     } else {
       res.status(400).json({
-        message: "Np Content Found!",
+        message: "No Content Found!",
       });
     }
   } catch (error) {

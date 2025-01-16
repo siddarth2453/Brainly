@@ -48,9 +48,7 @@ const Dashboard = () => {
         },
       });
       const data = response.data.contents;
-      setContents(data);
-      console.log(apiUrl);
-      
+      setContents(data);      
     }
   };
 
