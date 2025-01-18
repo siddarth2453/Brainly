@@ -55,7 +55,7 @@ const Share = () => {
         's Brain.
       </h1>
 
-      {contents.length === 0 ? (
+      {contents.length === 0 || undefined ? (
         <div className="text-center flex justify-center items-center font-semibold text-xl h-[70vh]">
           <p className="text-primary">{message}</p>
         </div>
