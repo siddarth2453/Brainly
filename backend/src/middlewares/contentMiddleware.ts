@@ -9,7 +9,7 @@ const contentMiddleware = (req: Request, res: Response, next: NextFunction) => {
       let videoId = null;
       try {
         const url = new URL(link);
-
+    
         if (url.hostname === "youtu.be") {
           // For share links: https://youtu.be/VIDEO_ID
           videoId = url.pathname.slice(1);
@@ -18,9 +18,15 @@ const contentMiddleware = (req: Request, res: Response, next: NextFunction) => {
           url.hostname === "youtube.com"
         ) {
           // For watch links: https://www.youtube.com/watch?v=VIDEO_ID
-          videoId = url.searchParams.get("v");
+          if (url.pathname.startsWith("/watch")) {
+            videoId = url.searchParams.get("v");
+          }
+          // For Shorts links: https://www.youtube.com/shorts/VIDEO_ID
+          else if (url.pathname.startsWith("/shorts")) {
+            videoId = url.pathname.split("/")[2]; // Extract the ID from the path
+          }
         }
-
+    
         // Check if videoId is valid
         if (!videoId || videoId.length !== 11) {
           res.status(400).json({
@@ -28,7 +34,7 @@ const contentMiddleware = (req: Request, res: Response, next: NextFunction) => {
           });
           return;
         }
-
+    
         // Update the link to the embed URL
         req.body.link = `https://www.youtube.com/embed/${videoId}`;
       } catch (error) {
@@ -37,7 +43,8 @@ const contentMiddleware = (req: Request, res: Response, next: NextFunction) => {
         });
         return;
       }
-    } else if (type === "tweet") {
+    }
+    else if (type === "tweet") {
       // Validate Twitter or X links
       try {
         let url = new URL(link);

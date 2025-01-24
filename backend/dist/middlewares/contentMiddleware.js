@@ -15,7 +15,13 @@ const contentMiddleware = (req, res, next) => {
                 else if (url.hostname === "www.youtube.com" ||
                     url.hostname === "youtube.com") {
                     // For watch links: https://www.youtube.com/watch?v=VIDEO_ID
-                    videoId = url.searchParams.get("v");
+                    if (url.pathname.startsWith("/watch")) {
+                        videoId = url.searchParams.get("v");
+                    }
+                    // For Shorts links: https://www.youtube.com/shorts/VIDEO_ID
+                    else if (url.pathname.startsWith("/shorts")) {
+                        videoId = url.pathname.split("/")[2]; // Extract the ID from the path
+                    }
                 }
                 // Check if videoId is valid
                 if (!videoId || videoId.length !== 11) {

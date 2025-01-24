@@ -190,7 +190,7 @@ app.post(
 
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
   try {
-    const {userId} = req;
+    const { userId } = req;
     const { filter } = req.query;
 
     const contents = await ContentModel.find({
@@ -198,27 +198,31 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
     }).populate("userId", "username");
 
     if (contents) {
-
-      if(filter == "all") {
+      if (filter == "all") {
         res.status(200).json({
           contents,
         });
-      } else if(filter == "youtube"){
-        const youtubeContents = contents.filter((content) => content.type === "youtube");
+      } else if (filter == "youtube") {
+        const youtubeContents = contents.filter(
+          (content) => content.type === "youtube"
+        );
         res.status(200).json({
           contents: youtubeContents,
         });
-      }else if(filter == "tweet"){
-        const tweetContents = contents.filter((content) => content.type === "tweet");
+      } else if (filter == "tweet") {
+        const tweetContents = contents.filter(
+          (content) => content.type === "tweet"
+        );
         res.status(200).json({
           contents: tweetContents,
         });
-    } else {
-      res.status(400).json({
-        message: "No content created by the user | Wrong filter",
-        filter
-      });
-    }}
+      } else {
+        res.status(400).json({
+          message: "No content created by the user | Wrong filter",
+          filter,
+        });
+      }
+    }
   } catch (error) {
     res.status(500).json({
       error,
@@ -319,7 +323,6 @@ app.get("/api/v1/brain/:username", async (req, res) => {
     });
   }
 });
-
 
 app.get("/api/v1/getuserinfo", userMiddleware, async (req, res) => {
   try {
