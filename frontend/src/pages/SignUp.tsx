@@ -6,6 +6,7 @@ import axios from "axios";
 import { NavLink } from "react-router";
 const apiUrl = import.meta.env.VITE_API_URL;
 
+console.log(apiUrl);
 const SignUp = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -26,7 +27,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post<{ message: string }>(
-        `${apiUrl}/signup`,
+        `${apiUrl}/api/v1/signup`,
         {
           username,
           email,

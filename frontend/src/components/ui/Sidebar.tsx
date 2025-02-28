@@ -68,7 +68,7 @@ const Sidebar = (props: SidebarType) => {
   };
 
 
-  const shareUrl = `https://brainlybybeast.vercel.app/brain/${username}`;
+  const shareUrl = `https://brainly.vercel.app/brain/${username}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl).then(() => {

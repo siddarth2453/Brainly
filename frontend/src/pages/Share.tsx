@@ -30,7 +30,7 @@ const Share = () => {
 
   const share = async () => {
     try {
-      const response = await axios.get<BrainResponse>(`${apiUrl}/brain/${username}`);
+      const response = await axios.get<BrainResponse>(`${apiUrl}/api/v1brain/${username}`);
 
       setContents(response.data.contents);
       setMessage(response.data.message); // Update message from the response

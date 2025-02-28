@@ -23,7 +23,7 @@ const userMiddleware = (req, res, next) => {
     catch (error) {
         res.status(500).json({
             message: "Something went Wrong",
-            error
+            error: error,
         });
     }
 };

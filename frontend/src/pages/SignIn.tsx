@@ -18,12 +18,12 @@ const SignIn = () => {
 
     try {
       const response: any = await axios.post(
-        `${apiUrl}/signin`,
+        `${apiUrl}/api/v1/signin`,
         {
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: false }
       );
 
       if (response.data.token) {

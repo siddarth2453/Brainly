@@ -8,6 +8,7 @@ export async function connectDb() {
         //connect to database
 
         const mongoUri = process.env.MONGO_URI;
+        console.log(mongoUri);
         if (!mongoUri) {
             throw new Error("MONGO_URI is not defined in the environment variables");
         }

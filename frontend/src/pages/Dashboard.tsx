@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const deleteContent = async (id: string) => {
     try {
-      await axios.delete(`${apiUrl}/content`, {
+      await axios.delete(`${apiUrl}/api/v1/content`, {
         //@ts-ignore
         data: { contentId: id },
         headers: {
