@@ -9,14 +9,6 @@ import { signupSchema, signinSchema } from "./utils/zodValidation";
 import { z } from "zod";
 import contentMiddleware from "./middlewares/contentMiddleware";
 
-declare global {
-  namespace Express {
-    export interface Request {
-      userId: string;
-      username: string;
-    }
-  }
-}
 
 const app = express();
 
